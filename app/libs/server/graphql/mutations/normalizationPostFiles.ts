@@ -1,0 +1,30 @@
+import { normalizationPostFiles as _normalizationPostFiles } from "../../normalizationPostFiles";
+import { isolatedFiles } from "../../uploadFile";
+import type { BuilderType } from "../builder";
+
+export const normalizationPostFiles = (
+  t: PothosSchemaTypes.MutationFieldBuilder<
+    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
+    unknown
+  >
+) =>
+  t.boolean({
+    args: {
+      postId: t.arg({ type: "String", required: true }),
+      removeAll: t.arg({ type: "Boolean" }),
+    },
+    resolve: async (_root, { postId, removeAll }, { db, user, env }) => {
+      if (!user) throw new Error("Unauthorized");
+      await _normalizationPostFiles(db, postId, removeAll === true, {
+        projectId: env.GOOGLE_PROJECT_ID ?? "",
+        clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
+        privateKey: env.GOOGLE_PRIVATE_KEY ?? "",
+      }).catch(() => null);
+      await isolatedFiles({
+        projectId: env.GOOGLE_PROJECT_ID ?? "",
+        clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
+        privateKey: env.GOOGLE_PRIVATE_KEY ?? "",
+      });
+      return true;
+    },
+  });
