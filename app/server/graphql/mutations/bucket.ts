@@ -1,4 +1,4 @@
-import { storage } from "../../getStorage";
+import { storage } from "../../libs/getStorage";
 import { CorsInput } from "../inputs";
 import { BucketObjectType } from "../objects";
 import type { BuilderType } from "../builder";

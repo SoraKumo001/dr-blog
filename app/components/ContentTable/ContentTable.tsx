@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
 import type { FC } from "react";
-import { classNames } from "~/libs/client/classNames";
+import { classNames } from "~/libs/classNames";
 
 export type MarkdownTitles = { text: string; depth: number }[];
 

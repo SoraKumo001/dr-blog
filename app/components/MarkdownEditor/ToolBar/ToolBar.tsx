@@ -21,8 +21,8 @@ import {
 } from "~/generated/graphql";
 import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
 import { useLoading } from "~/hooks/useLoading";
-import { classNames } from "~/libs/client/classNames";
-import { useConvertImage } from "~/libs/client/convertImage";
+import { classNames } from "~/libs/classNames";
+import { useConvertImage } from "~/libs/convertImage";
 interface Props {
   post: FindPostQuery["findFirstPost"];
   control: Control<FormInput>;

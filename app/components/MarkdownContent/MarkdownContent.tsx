@@ -1,7 +1,7 @@
 import css from "./MarkdownContent.css?inline";
 import type { FC, ReactNode } from "react";
-import { classNames } from "~/libs/client/classNames";
-import { MarkdownProvider } from "~/libs/client/markdownConverter";
+import { classNames } from "~/libs/classNames";
+import { MarkdownProvider } from "~/libs/markdownConverter";
 
 interface Props {
   className?: string;

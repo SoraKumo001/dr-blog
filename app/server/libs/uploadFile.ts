@@ -1,5 +1,5 @@
 import { eq, and, or, isNull } from "drizzle-orm";
-import { db } from "./context";
+import { db } from "../db";
 import { storage } from "./getStorage";
 import * as schema from "~/db/schema";
 

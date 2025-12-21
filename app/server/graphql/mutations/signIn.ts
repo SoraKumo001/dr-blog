@@ -1,6 +1,6 @@
 import { SignJWT } from "jose";
-import { getUser } from "../../getUser";
-import { getUserInfo } from "../../getUserInfo";
+import { getUser } from "../../libs/getUser";
+import { getUserInfo } from "../../libs/getUserInfo";
 import type { BuilderType } from "../builder";
 
 export const signIn = (

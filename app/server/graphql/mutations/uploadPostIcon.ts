@@ -1,5 +1,5 @@
 import { eq, sql } from "drizzle-orm";
-import { isolatedFiles, uploadFile } from "../../uploadFile";
+import { isolatedFiles, uploadFile } from "../../libs/uploadFile";
 import type { BuilderType } from "../builder";
 import { fireStore, post } from "~/db/schema";
 

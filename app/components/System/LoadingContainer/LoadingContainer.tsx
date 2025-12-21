@@ -1,7 +1,7 @@
 import { MdRefresh as IconRefresh } from "react-icons/md";
 
 import type { FC } from "react";
-import { useSelector } from "~/libs/client/context";
+import { useSelector } from "~/libs/context";
 
 interface Props {}
 

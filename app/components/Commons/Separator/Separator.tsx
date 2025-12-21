@@ -7,7 +7,7 @@ import {
 } from "react-icons/md";
 
 import type { FC, ReactNode } from "react";
-import { classNames } from "~/libs/client/classNames";
+import { classNames } from "~/libs/classNames";
 
 interface Props {
   className?: string;

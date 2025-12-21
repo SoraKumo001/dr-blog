@@ -1,9 +1,9 @@
 import { parse, serialize, type SerializeOptions } from "cookie";
 import { createYoga } from "graphql-yoga";
-import { type Context, db } from "../libs/server/context";
+import { type Context, db } from "../server/db";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { getUserFromToken } from "~/libs/client/getUserFromToken";
-import { schema } from "~/libs/server/graphql/schema";
+import { getUserFromToken } from "~/libs/getUserFromToken";
+import { schema } from "~/server/graphql/schema";
 
 const yoga = createYoga<
   {
@@ -31,7 +31,7 @@ const yoga = createYoga<
     return {
       req,
       env,
-      db,
+      db: db,
       user,
       cookies,
       setCookie,

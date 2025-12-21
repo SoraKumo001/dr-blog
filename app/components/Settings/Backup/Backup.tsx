@@ -11,7 +11,7 @@ import {
 import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
 import { useLoading } from "~/hooks/useLoading";
 import { useNotification } from "~/hooks/useNotification";
-import { arrayBufferToBase64, base64ToArrayBuffer } from "~/libs/server/buffer";
+import { arrayBufferToBase64, base64ToArrayBuffer } from "~/server/libs/buffer";
 
 interface Props {}
 

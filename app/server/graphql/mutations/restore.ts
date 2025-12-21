@@ -1,4 +1,4 @@
-import { importFile } from "../../importFile";
+import { importFile } from "../../libs/importFile";
 import type { BuilderType } from "../builder";
 
 export const restore = (

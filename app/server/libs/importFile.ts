@@ -1,4 +1,4 @@
-import { db } from "./context";
+import { db } from "../db";
 import { getImages } from "./getImages";
 import * as schema from "~/db/schema";
 

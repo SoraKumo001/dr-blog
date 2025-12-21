@@ -11,8 +11,8 @@ import { useFindPostQuery } from "~/generated/graphql";
 import { useUser } from "~/hooks/useAuth";
 import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
 import { useLoading } from "~/hooks/useLoading";
-import { DateString } from "~/libs/client/dateString";
-import { useMarkdown } from "~/libs/client/markdownConverter";
+import { DateString } from "~/libs/dateString";
+import { useMarkdown } from "~/libs/markdownConverter";
 
 const context = { additionalTypenames: ["Category"] };
 

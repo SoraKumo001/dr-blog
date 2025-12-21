@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { thumbHashToDataURL } from "thumbhash";
 import { useEnv } from "~/components/Provider/EnvProvider";
-import { classNames } from "~/libs/client/classNames";
-import { fileNameToHash } from "~/libs/client/thumbhash";
+import { classNames } from "~/libs/classNames";
+import { fileNameToHash } from "~/libs/thumbhash";
 type Props = {
   src: string;
   width?: number;

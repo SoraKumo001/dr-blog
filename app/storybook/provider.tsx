@@ -1,7 +1,7 @@
 import { Provider } from "urql";
 import { fromValue } from "wonka";
 import type { ReactNode } from "react";
-import { StoreProvider } from "~/libs/client/context";
+import { StoreProvider } from "~/libs/context";
 
 type Props = { value?: object; children: ReactNode };
 

@@ -5,7 +5,7 @@ import PothosDrizzleGeneratorPlugin, {
   isOperation,
   OperationMutation,
 } from "pothos-drizzle-generator";
-import { db, type Context } from "../context";
+import { db, type Context } from "../db";
 import { relations } from "~/db/relations";
 
 /**

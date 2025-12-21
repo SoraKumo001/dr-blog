@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { FieldSet } from "../FieldSet";
 import type { InputHTMLAttributes } from "react";
-import { classNames } from "~/libs/client/classNames";
+import { classNames } from "~/libs/classNames";
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & {
   className?: string;

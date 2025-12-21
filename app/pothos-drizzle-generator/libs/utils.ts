@@ -142,7 +142,7 @@ type AggregationQueryType = {
 };
 
 export const convertAggregationQuery = (query: AggregationQueryType) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const { aggregation, columns, ...q } = query;
   const newQuery = aggregation ? { ...q, columns: {} } : query;
   const newWith: Record<string, AggregationQueryType> = query.with

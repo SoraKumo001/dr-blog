@@ -16,8 +16,8 @@ import { UrqlProvider } from "./components/Provider/UrqlProvider";
 import { Header } from "./components/System/Header";
 import { LoadingContainer } from "./components/System/LoadingContainer";
 import { NotificationContainer } from "./components/System/Notification/NotificationContainer";
-import { StoreProvider } from "./libs/client/context";
-import { RootValue, useRootContext } from "./libs/server/RootContext";
+import { StoreProvider } from "./libs/context";
+import { RootValue, useRootContext } from "./server/libs/RootContext";
 import css from "./tailwind.css?inline";
 import type { Route } from "./+types/root";
 

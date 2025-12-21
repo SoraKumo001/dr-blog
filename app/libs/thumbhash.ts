@@ -1,4 +1,4 @@
-import { arrayBufferToBase64 } from "../server/buffer";
+import { arrayBufferToBase64 } from "../server/libs/buffer";
 
 export const hashToFileName = (hash: Uint8Array<ArrayBufferLike>) => {
   const v = arrayBufferToBase64(hash);

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useDispatch } from "~/libs/client/context";
+import { useDispatch } from "~/libs/context";
 
 export const useLoading = (loadings: boolean[] | boolean) => {
   const dispatch = useDispatch<{ loading?: number }>();

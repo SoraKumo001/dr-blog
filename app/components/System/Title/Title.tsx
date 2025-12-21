@@ -3,7 +3,7 @@ import type { FC, ReactNode } from "react";
 import { Head } from "~/components/Commons/Head";
 import { useEnv } from "~/components/Provider/EnvProvider";
 import { useFindSystemQuery } from "~/generated/graphql";
-import { useSelector } from "~/libs/client/context";
+import { useSelector } from "~/libs/context";
 
 interface Props {
   image?: string | null;

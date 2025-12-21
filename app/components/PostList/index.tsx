@@ -3,8 +3,8 @@ import { Link } from "react-router";
 import type { PostsQuery } from "~/generated/graphql";
 import { Image } from "~/components/Commons/Image";
 import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
-import { classNames } from "~/libs/client/classNames";
-import { DateString } from "~/libs/client/dateString";
+import { classNames } from "~/libs/classNames";
+import { DateString } from "~/libs/dateString";
 
 interface Props {
   id?: string;

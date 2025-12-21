@@ -2,11 +2,11 @@ import { Highlight, themes } from "prism-react-renderer";
 import { useMemo, type ComponentProps } from "react";
 import prod from "react/jsx-runtime";
 import { Link } from "react-router";
-import { classNames } from "../../classNames";
 import { useMarkdownContext } from "../markdownContext";
 import type { Options as RehypeReactOptions } from "rehype-react";
 import { Image } from "~/components/Commons/Image";
 import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
+import { classNames } from "~/libs/classNames";
 
 const FirebaseImage = ({
   src,

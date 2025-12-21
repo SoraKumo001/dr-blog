@@ -1,5 +1,5 @@
-import { normalizationPostFiles as _normalizationPostFiles } from "../../normalizationPostFiles";
-import { isolatedFiles } from "../../uploadFile";
+import { normalizationPostFiles as _normalizationPostFiles } from "../../libs/normalizationPostFiles";
+import { isolatedFiles } from "../../libs/uploadFile";
 import type { BuilderType } from "../builder";
 
 export const normalizationPostFiles = (

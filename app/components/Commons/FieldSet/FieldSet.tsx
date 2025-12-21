@@ -1,5 +1,5 @@
 import type { FC, HTMLAttributes, ReactNode } from "react";
-import { classNames } from "~/libs/client/classNames";
+import { classNames } from "~/libs/classNames";
 
 interface Props extends HTMLAttributes<HTMLFieldSetElement> {
   label?: string;

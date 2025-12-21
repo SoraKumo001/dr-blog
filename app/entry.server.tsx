@@ -1,8 +1,8 @@
 import { renderToReadableStream } from "react-dom/server";
 import { isRouteErrorResponse, ServerRouter } from "react-router";
-import { getUserFromToken } from "./libs/client/getUserFromToken";
-import { getHost } from "./libs/server/getHost";
-import { RootProvider } from "./libs/server/RootContext";
+import { getUserFromToken } from "./libs/getUserFromToken";
+import { getHost } from "./server/libs/getHost";
+import { RootProvider } from "./server/libs/RootContext";
 import type {
   ActionFunctionArgs,
   AppLoadContext,

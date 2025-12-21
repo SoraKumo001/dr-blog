@@ -1,4 +1,4 @@
-import { uploadFile } from "../../uploadFile";
+import { uploadFile } from "../../libs/uploadFile";
 import type { BuilderType } from "../builder";
 import { fireStoreToPost } from "~/db/schema";
 

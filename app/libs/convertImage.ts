@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { rgbaToThumbHash } from "thumbhash";
 import { optimizeImage } from "wasm-image-optimization/web-worker";
 import { hashToFileName } from "./thumbhash";
-import { arrayBufferToBase64 } from "~/libs/server/buffer";
+import { arrayBufferToBase64 } from "~/server/libs/buffer";
 
 const type = "avif";
 

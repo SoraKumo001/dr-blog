@@ -16,8 +16,8 @@ import {
 } from "~/generated/graphql";
 import { useLoading } from "~/hooks/useLoading";
 import { useNotification } from "~/hooks/useNotification";
-import { getImageSize, useConvertImage } from "~/libs/client/convertImage";
-import { useMarkdown } from "~/libs/client/markdownConverter";
+import { getImageSize, useConvertImage } from "~/libs/convertImage";
+import { useMarkdown } from "~/libs/markdownConverter";
 
 export type FormInput = {
   categories: string[];

@@ -1,5 +1,5 @@
 import { semaphore } from "@node-libraries/semaphore";
-import { storage } from "../../getStorage";
+import { storage } from "../../libs/getStorage";
 import type { BuilderType } from "../builder";
 import { fireStore } from "~/db/schema";
 

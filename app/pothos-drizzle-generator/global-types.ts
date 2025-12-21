@@ -1,12 +1,14 @@
-import type { SchemaTypes } from "@pothos/core";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-namespace */
+import type { Operation, OperationBasic } from "./libs/operations.js";
 import type { PothosDrizzleGenerator } from "./PothosDrizzleGenerator.js";
+import type { SchemaTypes } from "@pothos/core";
 import type {
   DBQueryConfigColumns,
   GetTableViewFieldSelection,
   RelationsFilter,
   SchemaEntry,
 } from "drizzle-orm";
-import type { Operation, OperationBasic } from "./libs/operations.js";
 import type { PgTable, PgUpdateSetSource } from "drizzle-orm/pg-core";
 
 declare global {
