@@ -142,8 +142,7 @@ type AggregationQueryType = {
 };
 
 export const convertAggregationQuery = (query: AggregationQueryType) => {
-   
-  const { aggregation, columns, ...q } = query;
+  const { aggregation, columns: _, ...q } = query;
   const newQuery = aggregation ? { ...q, columns: {} } : query;
   const newWith: Record<string, AggregationQueryType> = query.with
     ? Object.fromEntries(

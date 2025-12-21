@@ -20,7 +20,6 @@ export const Title: FC<Props> = ({ image, children }) => {
   const host = useSelector((state: { host?: string }) => state.host);
   const env = useEnv();
   const OGP_URL = env["NEXT_PUBLIC_OGP_URL"];
-  const IMAGE_URL = env["NEXT_PUBLIC_IMAGE_URL"];
   const subTitle = useMemo(() => {
     return React.Children.map(children, (c) =>
       typeof c === "object" ? "" : c

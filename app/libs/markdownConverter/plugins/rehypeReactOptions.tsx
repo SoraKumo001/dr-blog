@@ -48,7 +48,7 @@ const FirebaseImage = ({
 };
 
 const Code = ({
-  ref,
+  ref: _,
   children,
   ...props
 }: ComponentProps<"code"> & {

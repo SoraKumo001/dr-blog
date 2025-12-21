@@ -4,7 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "rimraf node_modules/.vite && npm-run-all -p dev:*",
+    "dev": "npm-run-all -p dev:*",
     "dev:react-router": "react-router dev --port 3000",
     "dev:docker": "docker compose -f docker/development/docker-compose.yml up -d",
     "dev:codegen": "graphql-codegen -c codegen/codegen.ts -w",

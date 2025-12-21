@@ -26,7 +26,7 @@ const useBluerHash = ({
     if (!hash || !width || !height) return;
     try {
       return thumbHashToDataURL(fileNameToHash(hash));
-    } catch (e) {}
+    } catch {}
   }, [src, width, height]);
 };
 

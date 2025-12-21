@@ -17,7 +17,7 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & {
  */
 
 export const TextField = forwardRef<HTMLInputElement, Props>(
-  ({ className, inputClassName, label, size, ...props }, ref) => {
+  ({ className, inputClassName, label, size: _size, ...props }, ref) => {
     return (
       <FieldSet
         className={classNames("focus-within:border-primary", className)}

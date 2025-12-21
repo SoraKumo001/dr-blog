@@ -55,7 +55,10 @@ export default [
       "@typescript-eslint/ban-ts-comment": 0,
       "better-tailwindcss/multiline": [0, { printWidth: 300 }],
       "@typescript-eslint/no-import-type-side-effects": 1,
-      "@typescript-eslint/no-unused-vars": 0,
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
       "@typescript-eslint/no-empty-object-type": 0,
       "no-empty-pattern": 0,
       "no-empty": 0,

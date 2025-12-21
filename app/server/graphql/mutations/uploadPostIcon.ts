@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { isolatedFiles, uploadFile } from "../../libs/uploadFile";
 import type { BuilderType } from "../builder";
 import { fireStore, post } from "~/db/schema";

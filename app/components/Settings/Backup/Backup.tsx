@@ -69,7 +69,7 @@ export const Backup: FC<Props> = () => {
             JSON.stringify({
               ...values,
 
-              files: values.files.map(({ binary, ...v }) => v),
+              files: values.files.map(({ binary: _, ...v }) => v),
             }),
           ],
           file.name,
