@@ -1,9 +1,14 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 import { GraphQLScalarType } from "graphql";
 import { builder } from "./builder";
+import * as mutations from "./mutations";
+import * as queries from "./queries";
 
-require("./queries");
-require("./mutations");
+// dummy
+const dummy = () => ({
+  queries,
+  mutations,
+});
+dummy();
 
 if (!builder.configStore.hasConfig("Upload")) {
   const Upload = new GraphQLScalarType({

@@ -2,7 +2,7 @@ import { uploadFile } from "../../libs/uploadFile";
 import { builder } from "../builder";
 import { fireStoreToPost } from "~/db/schema";
 
-builder.mutationField("uploadPostImage", (t) =>
+export const uploadPostImage = builder.mutationField("uploadPostImage", (t) =>
   t.drizzleField({
     type: "fireStore",
     nullable: false,

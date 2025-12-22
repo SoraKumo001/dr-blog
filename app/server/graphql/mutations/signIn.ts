@@ -3,7 +3,7 @@ import { getUser } from "../../libs/getUser";
 import { getUserInfo } from "../../libs/getUserInfo";
 import { builder } from "../builder";
 
-builder.mutationField("signIn", (t) =>
+export const signIn = builder.mutationField("signIn", (t) =>
   t.drizzleField({
     args: { token: t.arg({ type: "String" }) },
     type: "user",

@@ -2,7 +2,7 @@ import { storage } from "../../libs/getStorage";
 import { builder } from "../builder";
 import { BucketObjectType } from "../objects";
 
-builder.queryField("bucket", (t) =>
+export const bucket = builder.queryField("bucket", (t) =>
   t.field({
     type: BucketObjectType,
     resolve: async (_parent, _input, { env, user }) => {

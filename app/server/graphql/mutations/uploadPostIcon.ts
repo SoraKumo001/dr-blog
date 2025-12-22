@@ -3,7 +3,7 @@ import { isolatedFiles, uploadFile } from "../../libs/uploadFile";
 import { builder } from "../builder";
 import { fireStore, post } from "~/db/schema";
 
-builder.mutationField("uploadPostIcon", (t) =>
+export const uploadPostIcon = builder.mutationField("uploadPostIcon", (t) =>
   t.drizzleField({
     type: "fireStore",
     args: {

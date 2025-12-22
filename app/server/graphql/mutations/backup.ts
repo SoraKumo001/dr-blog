@@ -1,6 +1,6 @@
 import { builder } from "../builder";
 
-builder.mutationField("backup", (t) =>
+export const backup = builder.mutationField("backup", (t) =>
   t.string({
     nullable: false,
     resolve: async (_root, {}, { user, db }) => {

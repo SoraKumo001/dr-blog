@@ -6,14 +6,22 @@ import {
   timestamp,
   uuid,
   pgSchema,
+  pgTable,
+  type PgTableFn,
 } from "drizzle-orm/pg-core";
 
 const url = new URL(process.env.DATABASE_URL);
-const searchPath = url.searchParams.get("schema") ?? "public";
+const searchPath = !process.env["npm_lifecycle_script"]?.startsWith(
+  "drizzle-kit generate"
+)
+  ? url.searchParams.get("schema")
+  : undefined;
 
-const schema = pgSchema(searchPath);
+const createTable = searchPath
+  ? pgSchema(searchPath).table
+  : (pgTable as unknown as PgTableFn<string>);
 
-export const user = schema.table("User", {
+export const user = createTable("User", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   email: text().notNull().unique(),
   name: text().notNull().default("User"),
@@ -21,7 +29,7 @@ export const user = schema.table("User", {
   updatedAt: timestamp({ precision: 3 }).notNull().defaultNow(),
 });
 
-export const post = schema.table("Post", {
+export const post = createTable("Post", {
   id: text()
     .notNull()
     .primaryKey()
@@ -46,7 +54,7 @@ export const post = schema.table("Post", {
     .defaultNow(),
 });
 
-export const category = schema.table("Category", {
+export const category = createTable("Category", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   name: text().notNull(),
   createdAt: timestamp("createdAt", { precision: 3 }).notNull().defaultNow(),
@@ -56,7 +64,7 @@ export const category = schema.table("Category", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const system = schema.table("System", {
+export const system = createTable("System", {
   id: text().notNull().primaryKey(),
   title: text().notNull(),
   description: text().notNull(),
@@ -75,7 +83,7 @@ export const system = schema.table("System", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const fireStore = schema.table("FireStore", {
+export const fireStore = createTable("FireStore", {
   id: text().notNull().primaryKey(),
   name: text().notNull(),
   mimeType: text().notNull(),
@@ -86,7 +94,7 @@ export const fireStore = schema.table("FireStore", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const categoryToPost = schema.table(
+export const categoryToPost = createTable(
   "CategoryToPost",
   {
     postId: text()
@@ -104,7 +112,7 @@ export const categoryToPost = schema.table(
   (t) => [primaryKey({ columns: [t.postId, t.categoryId] })]
 );
 
-export const fireStoreToPost = schema.table(
+export const fireStoreToPost = createTable(
   "FireStoreToPost",
   {
     postId: text()

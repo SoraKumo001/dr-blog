@@ -3,7 +3,7 @@ import { builder } from "../builder";
 import * as schema from "~/db/schema";
 import { db } from "~/server/db";
 
-builder.mutationField("restore", (t) =>
+export const restore = builder.mutationField("restore", (t) =>
   t.boolean({
     args: {
       file: t.arg({ type: "Upload", required: true }),

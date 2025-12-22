@@ -4,7 +4,7 @@ import { builder } from "../builder";
 import { fireStore } from "~/db/schema";
 import * as schema from "~/db/schema";
 
-builder.mutationField("restoreFiles", (t) =>
+export const restoreFiles = builder.mutationField("restoreFiles", (t) =>
   t.drizzleField({
     type: ["fireStore"],
     args: {

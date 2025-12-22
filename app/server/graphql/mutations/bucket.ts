@@ -3,7 +3,7 @@ import { builder } from "../builder";
 import { CorsInput } from "../inputs";
 import { BucketObjectType } from "../objects";
 
-builder.mutationField("bucket", (t) =>
+export const bucket = builder.mutationField("bucket", (t) =>
   t.field({
     type: BucketObjectType,
     args: {
