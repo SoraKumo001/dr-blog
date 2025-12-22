@@ -7,20 +7,6 @@ import { defineConfig } from "vite";
 import wasmImageOptimizationPlugin from "wasm-image-optimization/vite-plugin";
 
 export default defineConfig(({ mode }) => ({
-  // server: {
-  //   hotUpdateEnvironments: async (server, hmr) => {
-  //     const file = path.resolve(__dirname, "app/server/graphql/builder.ts");
-  //     const mod = server.moduleGraph.getModuleById(file);
-  //     // console.log(
-  //     //   Object.fromEntries(server.moduleGraph.idToModuleMap.entries())
-  //     // );
-  //     console.log(await server.ssrLoadModule("/app/server/graphql/builder.ts"));
-  //     if (mod) {
-  //       console.log("reload");
-  //       server.moduleGraph.invalidateModule(mod);
-  //     }
-  //   },
-  // },
   resolve: {
     tsconfigPaths: true,
     alias: [
