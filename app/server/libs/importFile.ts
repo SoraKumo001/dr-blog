@@ -13,17 +13,23 @@ type DataType = {
 export const importFile = async ({ file }: { file: string }) => {
   const data: DataType = JSON.parse(file);
   if (data) {
+    console.log(data.system[0]);
+
     await db
       .insert(schema.system)
       .values(data.system[0])
-      .onConflictDoUpdate({ target: schema.system.id, set: data.system[0] });
+      .onConflictDoUpdate({ target: schema.system.id, set: data.system[0] })
+      .returning();
 
     await db.transaction(async (tx) => {
       for (const value of data.users) {
         await tx
           .insert(schema.user)
           .values(value)
-          .onConflictDoUpdate({ target: schema.user.id, set: value });
+          .onConflictDoUpdate({
+            target: schema.user.id,
+            set: { ...value, email: "a@a" },
+          });
       }
     });
 
@@ -64,10 +70,10 @@ export const importFile = async ({ file }: { file: string }) => {
       for (const value of data.posts) {
         const images = imageList[value.id];
         const { categories, ...post } = value;
-        await tx
-          .insert(schema.post)
-          .values(post)
-          .onConflictDoUpdate({ target: schema.post.id, set: post });
+        await tx.insert(schema.post).values(post).onConflictDoUpdate({
+          target: schema.post.id,
+          set: post,
+        });
 
         const connectImages = images.filter((v) => ids.has(v));
         if (connectImages.length) {

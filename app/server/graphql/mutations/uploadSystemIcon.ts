@@ -1,14 +1,9 @@
 import { eq } from "drizzle-orm";
 import { isolatedFiles, uploadFile } from "../../libs/uploadFile";
-import type { BuilderType } from "../builder";
+import { builder } from "../builder";
 import { system } from "~/db/schema";
 
-export const uploadSystemIcon = (
-  t: PothosSchemaTypes.MutationFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) =>
+builder.mutationField("uploadSystemIcon", (t) =>
   t.drizzleField({
     type: "fireStore",
     args: {
@@ -37,4 +32,5 @@ export const uploadSystemIcon = (
       if (!firestore) throw new Error("icon is not found");
       return firestore;
     },
-  });
+  })
+);

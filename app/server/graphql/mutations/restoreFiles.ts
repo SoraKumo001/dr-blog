@@ -1,22 +1,21 @@
 import { semaphore } from "@node-libraries/semaphore";
 import { storage } from "../../libs/getStorage";
-import type { BuilderType } from "../builder";
+import { builder } from "../builder";
 import { fireStore } from "~/db/schema";
+import * as schema from "~/db/schema";
 
-export const restoreFiles = (
-  t: PothosSchemaTypes.MutationFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) =>
+builder.mutationField("restoreFiles", (t) =>
   t.drizzleField({
     type: ["fireStore"],
     args: {
       files: t.arg({ type: ["Upload"], required: true }),
     },
     resolve: async (_query, _root, { files }, { user, env, db }) => {
-      if (!user) throw new Error("Unauthorized");
-
+      if (!user) {
+        if (await db.$count(schema.user)) {
+          throw new Error("Unauthorized");
+        }
+      }
       const firebaseStorage = storage({
         projectId: env.GOOGLE_PROJECT_ID ?? "",
         clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
@@ -49,4 +48,5 @@ export const restoreFiles = (
         })
       );
     },
-  });
+  })
+);

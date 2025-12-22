@@ -1171,7 +1171,7 @@ export type DeletePostMutationVariables = Exact<{
 }>;
 
 
-export type DeletePostMutation = { __typename?: 'Mutation', deletePost: Array<{ __typename?: 'Post_', id: string, published: boolean, title: string, authorId: string, cardId?: string | null, createdAt: Date | string, updatedAt: Date | string, publishedAt: Date | string }> };
+export type DeletePostMutation = { __typename?: 'Mutation', normalizationPostFiles?: boolean | null, deletePost: Array<{ __typename: 'Post_' }> };
 
 export type UpdatePostMutationVariables = Exact<{
   postId: Scalars['String']['input'];
@@ -1394,15 +1394,9 @@ export function useCreateOnePostMutation() {
 export const DeletePostDocument = gql`
     mutation DeletePost($id: String!) {
   deletePost(where: {id: {eq: $id}}) {
-    id
-    published
-    title
-    authorId
-    cardId
-    createdAt
-    updatedAt
-    publishedAt
+    __typename
   }
+  normalizationPostFiles(postId: $id)
 }
     `;
 

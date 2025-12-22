@@ -1,13 +1,8 @@
 import { normalizationPostFiles as _normalizationPostFiles } from "../../libs/normalizationPostFiles";
 import { isolatedFiles } from "../../libs/uploadFile";
-import type { BuilderType } from "../builder";
+import { builder } from "../builder";
 
-export const normalizationPostFiles = (
-  t: PothosSchemaTypes.MutationFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) =>
+builder.mutationField("normalizationPostFiles", (t) =>
   t.boolean({
     args: {
       postId: t.arg({ type: "String", required: true }),
@@ -27,4 +22,5 @@ export const normalizationPostFiles = (
       });
       return true;
     },
-  });
+  })
+);

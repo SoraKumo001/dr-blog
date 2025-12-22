@@ -1,3 +1,4 @@
+import path from "path";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
@@ -6,6 +7,20 @@ import { defineConfig } from "vite";
 import wasmImageOptimizationPlugin from "wasm-image-optimization/vite-plugin";
 
 export default defineConfig(({ mode }) => ({
+  // server: {
+  //   hotUpdateEnvironments: async (server, hmr) => {
+  //     const file = path.resolve(__dirname, "app/server/graphql/builder.ts");
+  //     const mod = server.moduleGraph.getModuleById(file);
+  //     // console.log(
+  //     //   Object.fromEntries(server.moduleGraph.idToModuleMap.entries())
+  //     // );
+  //     console.log(await server.ssrLoadModule("/app/server/graphql/builder.ts"));
+  //     if (mod) {
+  //       console.log("reload");
+  //       server.moduleGraph.invalidateModule(mod);
+  //     }
+  //   },
+  // },
   resolve: {
     tsconfigPaths: true,
     alias: [
@@ -29,5 +44,17 @@ export default defineConfig(({ mode }) => ({
     //     plugins: [["babel-plugin-react-compiler"]],
     //   },
     // }),
+    {
+      name: "updater",
+      async hotUpdate({ server }) {
+        const mod = await server.moduleGraph.getModuleByUrl(
+          "/app/server/graphql/builder.ts"
+        );
+
+        if (mod) {
+          server.moduleGraph.invalidateModule(mod);
+        }
+      },
+    },
   ],
 }));

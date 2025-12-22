@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "31c02ab9-7c42-4732-a356-cd251a5a14a6",
+  "id": "1b1b1b5b-b7db-4377-bd17-bb905130ae13",
   "prevIds": [
-    "02af205a-0681-458d-aed3-d019a5a7abf7"
+    "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
     {
@@ -101,7 +101,7 @@
       "table": "Category"
     },
     {
-      "type": "uuid",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -192,7 +192,7 @@
       "table": "FireStore"
     },
     {
-      "type": "uuid",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -218,11 +218,11 @@
       "table": "FireStoreToPost"
     },
     {
-      "type": "uuid",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": "gen_random_uuid()",
+      "default": "gen_random_uuid ()",
       "generated": null,
       "identity": null,
       "name": "id",

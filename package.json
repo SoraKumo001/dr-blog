@@ -52,7 +52,7 @@
     "react": "19.2.3",
     "react-daisyui": "^5.0.5",
     "react-dom": "^19.2.3",
-    "react-hook-form": "^7.68.0",
+    "react-hook-form": "^7.69.0",
     "react-icons": "^5.5.0",
     "react-router": "^7.11.0",
     "react-router-dom": "^7.11.0",
@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.19.0",
-    "@cloudflare/workers-types": "^4.20251219.0",
+    "@cloudflare/workers-types": "^4.20251221.0",
     "@eslint/js": "9.39.2",
     "@graphql-codegen/cli": "^6.1.0",
     "@graphql-codegen/typescript": "^5.0.7",

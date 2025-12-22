@@ -1,1 +1,0 @@
-ALTER TABLE "FireStoreToPost" ADD PRIMARY KEY ("postId","fireStoreId");

@@ -4,6 +4,7 @@ import { getTableConfig } from "drizzle-orm/pg-core";
 import PothosDrizzleGeneratorPlugin, {
   isOperation,
   OperationMutation,
+  OperationQuery,
 } from "pothos-drizzle-generator";
 import { db, type Context } from "../db";
 import { relations } from "~/db/relations";
@@ -34,7 +35,7 @@ export const builder = new SchemaBuilder<BuilderType>({
     all: {
       executable: ({ operation, ctx }) => {
         // Prohibit write operations if the user is not authenticated
-        if (isOperation(OperationMutation, operation) && !ctx.user?.id) {
+        if (isOperation(OperationMutation, operation) && !ctx.user) {
           return false;
         }
         return true;
@@ -42,6 +43,20 @@ export const builder = new SchemaBuilder<BuilderType>({
     },
     models: {
       post: {
+        where: ({ operation, ctx }) => {
+          if (isOperation(OperationQuery, operation)) {
+            return {
+              OR: [
+                { authorId: { eq: ctx.user?.id } },
+                { published: { eq: true } },
+              ],
+            };
+          }
+          return undefined;
+        },
+        // inputFields: ({}) => {
+        //   return { exclude: ["authorId"] };
+        // },
         inputData: ({ ctx }) => {
           return { authorId: ctx.user?.id };
         },

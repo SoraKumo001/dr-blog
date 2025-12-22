@@ -162,7 +162,8 @@ declare global {
               | {
                   exclude: Columns<Types, U>[];
                   include?: undefined;
-                };
+                }
+              | undefined;
             inputData?: (params: {
               ctx: Types["Context"];
               modelName: U;

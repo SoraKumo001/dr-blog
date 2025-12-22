@@ -1,14 +1,9 @@
 import { storage } from "../../libs/getStorage";
+import { builder } from "../builder";
 import { CorsInput } from "../inputs";
 import { BucketObjectType } from "../objects";
-import type { BuilderType } from "../builder";
 
-export const bucket = (
-  t: PothosSchemaTypes.MutationFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) =>
+builder.mutationField("bucket", (t) =>
   t.field({
     type: BucketObjectType,
     args: {
@@ -32,4 +27,5 @@ export const bucket = (
       s.updateBucket({ body: { cors: cors2 } });
       return s.infoBucket({});
     },
-  });
+  })
+);

@@ -1,1 +1,1 @@
-export * from "./bucket";
+import "./bucket";

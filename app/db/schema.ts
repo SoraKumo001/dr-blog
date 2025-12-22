@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
   pgTable,
@@ -16,7 +17,10 @@ export const user = pgTable("User", {
 });
 
 export const post = pgTable("Post", {
-  id: uuid().notNull().primaryKey().defaultRandom(),
+  id: text()
+    .notNull()
+    .primaryKey()
+    .default(sql`gen_random_uuid ()`),
   published: boolean().notNull(),
   title: text().notNull().default("New Post"),
   content: text().notNull(),
@@ -80,7 +84,7 @@ export const fireStore = pgTable("FireStore", {
 export const categoryToPost = pgTable(
   "CategoryToPost",
   {
-    postId: uuid()
+    postId: text()
       .notNull()
       .primaryKey()
       .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -98,7 +102,7 @@ export const categoryToPost = pgTable(
 export const fireStoreToPost = pgTable(
   "FireStoreToPost",
   {
-    postId: uuid()
+    postId: text()
       .notNull()
       .primaryKey()
       .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),

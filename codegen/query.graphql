@@ -9,7 +9,7 @@ mutation SignIn($token: String) {
 }
 
 query FindPost($postId: String!) {
-  findFirstPost(where: { id: {eq:$postId} }) {
+  findFirstPost(where: { id: { eq: $postId } }) {
     id
     published
     title
@@ -48,7 +48,7 @@ query FindPosts {
 }
 
 mutation CreateOnePost {
-  createOnePost(input:{authorId: "",content: "",published: false}) {
+  createOnePost(input: { authorId: "", content: "", published: false }) {
     id
     published
     title
@@ -67,16 +67,10 @@ mutation CreateOnePost {
 }
 
 mutation DeletePost($id: String!) {
-  deletePost(where: { id:{eq: $id }}) {
-    id
-    published
-    title
-    authorId
-    cardId
-    createdAt
-    updatedAt
-    publishedAt
+  deletePost(where: { id: { eq: $id } }) {
+    __typename
   }
+  normalizationPostFiles(postId: $id)
 }
 
 mutation UpdatePost(
@@ -87,9 +81,7 @@ mutation UpdatePost(
   $publishedAt: DateTime
   $categories: [CategoryToPostCreate!]!
 ) {
-  deleteCategoryToPost(where:  {
-    postId:{eq:$postId}
-  }) {
+  deleteCategoryToPost(where: { postId: { eq: $postId } }) {
     __typename
   }
   createManyCategoryToPost(input: $categories) {
@@ -102,7 +94,7 @@ mutation UpdatePost(
       published: $published
       publishedAt: $publishedAt
     }
-    where: { id: {eq:$postId} }
+    where: { id: { eq: $postId } }
   ) {
     id
     published
@@ -134,7 +126,7 @@ mutation UploadPostImage($postId: String!, $file: Upload!) {
 }
 
 query FindSystem {
-  findFirstSystem(where: { id:{eq: "system"} }) {
+  findFirstSystem(where: { id: { eq: "system" } }) {
     id
     title
     description
@@ -164,14 +156,10 @@ mutation CreateSystem($input: SystemCreate!) {
   }
 }
 
-mutation UpdateSystem(
-  $title: String
-  $description: String
-  $icon: String
-) {
+mutation UpdateSystem($title: String, $description: String, $icon: String) {
   updateSystem(
     input: { title: $title, description: $description, iconId: $icon }
-    where: { id: {eq:"system"} }
+    where: { id: { eq: "system" } }
   ) {
     id
     title
@@ -191,7 +179,7 @@ mutation UpdateSystem(
 }
 
 query FindCategory($id: String!) {
-  findFirstCategory(where: { id: {eq:$id} }) {
+  findFirstCategory(where: { id: { eq: $id } }) {
     id
     name
     createdAt
@@ -216,7 +204,7 @@ mutation CreateCategory($name: String!) {
   }
 }
 mutation UpdateCategory($id: String!, $name: String!) {
-  updateCategory(where: { id:{eq: $id} }, input: { name: $name }) {
+  updateCategory(where: { id: { eq: $id } }, input: { name: $name }) {
     id
     name
     createdAt
@@ -225,7 +213,7 @@ mutation UpdateCategory($id: String!, $name: String!) {
 }
 
 mutation DeleteCategory($id: String!) {
-  deleteCategory(where: { id: {eq:$id} }) {
+  deleteCategory(where: { id: { eq: $id } }) {
     id
     name
     createdAt

@@ -6,7 +6,7 @@ CREATE TABLE "Category" (
 );
 --> statement-breakpoint
 CREATE TABLE "CategoryToPost" (
-	"postId" uuid,
+	"postId" text,
 	"categoryId" uuid,
 	CONSTRAINT "CategoryToPost_pkey" PRIMARY KEY("postId","categoryId")
 );
@@ -20,12 +20,13 @@ CREATE TABLE "FireStore" (
 );
 --> statement-breakpoint
 CREATE TABLE "FireStoreToPost" (
-	"postId" uuid NOT NULL,
-	"fireStoreId" text NOT NULL
+	"postId" text,
+	"fireStoreId" text,
+	CONSTRAINT "FireStoreToPost_pkey" PRIMARY KEY("postId","fireStoreId")
 );
 --> statement-breakpoint
 CREATE TABLE "Post" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"id" text PRIMARY KEY DEFAULT gen_random_uuid (),
 	"published" boolean NOT NULL,
 	"title" text DEFAULT 'New Post' NOT NULL,
 	"content" text NOT NULL,

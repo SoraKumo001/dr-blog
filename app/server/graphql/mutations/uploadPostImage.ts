@@ -1,13 +1,8 @@
 import { uploadFile } from "../../libs/uploadFile";
-import type { BuilderType } from "../builder";
+import { builder } from "../builder";
 import { fireStoreToPost } from "~/db/schema";
 
-export const uploadPostImage = (
-  t: PothosSchemaTypes.MutationFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) =>
+builder.mutationField("uploadPostImage", (t) =>
   t.drizzleField({
     type: "fireStore",
     nullable: false,
@@ -29,4 +24,5 @@ export const uploadPostImage = (
       });
       return firestore;
     },
-  });
+  })
+);

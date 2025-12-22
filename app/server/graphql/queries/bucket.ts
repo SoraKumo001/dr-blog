@@ -1,14 +1,9 @@
 import { storage } from "../../libs/getStorage";
+import { builder } from "../builder";
 import { BucketObjectType } from "../objects";
-import type { BuilderType } from "../builder";
 
-export const bucket = (
-  t: PothosSchemaTypes.QueryFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) => {
-  return t.field({
+builder.queryField("bucket", (t) =>
+  t.field({
     type: BucketObjectType,
     resolve: async (_parent, _input, { env, user }) => {
       if (!user) throw new Error("Unauthorized");
@@ -19,5 +14,5 @@ export const bucket = (
       });
       return s.infoBucket({});
     },
-  });
-};
+  })
+);

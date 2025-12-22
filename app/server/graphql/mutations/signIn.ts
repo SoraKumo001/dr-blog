@@ -1,14 +1,9 @@
 import { SignJWT } from "jose";
 import { getUser } from "../../libs/getUser";
 import { getUserInfo } from "../../libs/getUserInfo";
-import type { BuilderType } from "../builder";
+import { builder } from "../builder";
 
-export const signIn = (
-  t: PothosSchemaTypes.MutationFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) =>
+builder.mutationField("signIn", (t) =>
   t.drizzleField({
     args: { token: t.arg({ type: "String" }) },
     type: "user",
@@ -47,4 +42,5 @@ export const signIn = (
       }
       return user;
     },
-  });
+  })
+);

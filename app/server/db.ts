@@ -43,16 +43,16 @@ export const db: NodePgDatabase<typeof relations, typeof relations> = new Proxy<
           options: `--search_path=${searchPath}`,
         },
         relations,
-        logger: {
-          logQuery: (query, params) => {
-            console.info(
-              "===========================\n",
-              format(query, { language: "postgresql" }),
-              "\n--\n",
-              params
-            );
-          },
-        },
+        // logger: {
+        //   logQuery: (query, params) => {
+        //     console.info(
+        //       "===========================\n",
+        //       format(query, { language: "postgresql" }),
+        //       "\n--\n",
+        //       params
+        //     );
+        //   },
+        // },
       });
       context.set("db", db);
     }

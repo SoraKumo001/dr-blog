@@ -1,14 +1,9 @@
 import { eq } from "drizzle-orm";
 import { isolatedFiles, uploadFile } from "../../libs/uploadFile";
-import type { BuilderType } from "../builder";
+import { builder } from "../builder";
 import { fireStore, post } from "~/db/schema";
 
-export const uploadPostIcon = (
-  t: PothosSchemaTypes.MutationFieldBuilder<
-    PothosSchemaTypes.ExtendDefaultTypes<BuilderType>,
-    unknown
-  >
-) =>
+builder.mutationField("uploadPostIcon", (t) =>
   t.drizzleField({
     type: "fireStore",
     args: {
@@ -55,4 +50,5 @@ export const uploadPostIcon = (
       if (!card) throw new Error("card is not found");
       return card;
     },
-  });
+  })
+);
