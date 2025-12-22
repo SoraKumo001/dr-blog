@@ -5,13 +5,13 @@ import { ImageDragField } from "~/components/Commons/ImageDragField";
 import { TextField } from "~/components/Commons/TextField";
 import {
   useCreateSystemMutation,
-  useFindSystemQuery,
   useUpdateSystemMutation,
   useUploadSystemIconMutation,
 } from "~/generated/graphql";
 import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
 import { useLoading } from "~/hooks/useLoading";
 import { useNotification } from "~/hooks/useNotification";
+import { useSystem } from "~/hooks/useSystem";
 
 interface FormInput {
   title: string;
@@ -28,7 +28,7 @@ interface Props {}
 export const SiteSetting: FC<Props> = ({}) => {
   const sendNotification = useNotification();
   const { register, handleSubmit } = useForm<FormInput>();
-  const [{ data, fetching, error }] = useFindSystemQuery();
+  const [{ data, fetching, error }] = useSystem();
   const [{ fetching: mutationFetching }, updateSystem] =
     useUpdateSystemMutation();
   const [, uploadSystemIcon] = useUploadSystemIconMutation();

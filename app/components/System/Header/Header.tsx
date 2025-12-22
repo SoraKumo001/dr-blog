@@ -9,10 +9,10 @@ import {
 import { Link, useNavigate } from "react-router";
 import type { FC } from "react";
 import { Head } from "~/components/Commons/Head";
-import { useFindSystemQuery } from "~/generated/graphql";
 import { useUser, useSignOut } from "~/hooks/useAuth";
 import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
 import { useLoading } from "~/hooks/useLoading";
+import { useSystem } from "~/hooks/useSystem";
 
 interface Props {}
 
@@ -24,7 +24,7 @@ interface Props {}
 export const Header: FC<Props> = () => {
   const navigate = useNavigate();
   const session = useUser();
-  const [{ data, fetching, error }] = useFindSystemQuery();
+  const [{ data, fetching, error }] = useSystem();
   const signOut = useSignOut();
   useLoading(fetching);
   const getFirebaseUrl = useFirebaseUrl();

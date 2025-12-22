@@ -1,5 +1,6 @@
 import { NextSSRWait } from "@react-libraries/next-exchange-ssr";
 import { CloudflareFonts } from "cloudflare-fonts";
+import { useState } from "react";
 import {
   isRouteErrorResponse,
   Links,
@@ -11,6 +12,7 @@ import {
 } from "react-router";
 import { GoogleAnalytics } from "./components/Commons/GoogleAnalytics";
 import { HeadProvider, HeadRoot } from "./components/Commons/Head";
+import { AppProvider } from "./components/Provider/AppProvider";
 import { EnvProvider } from "./components/Provider/EnvProvider";
 import { UrqlProvider } from "./components/Provider/UrqlProvider";
 import { Header } from "./components/System/Header";
@@ -24,45 +26,53 @@ import type { Route } from "./+types/root";
 export function Layout({ children }: { children: React.ReactNode }) {
   const value = useRootContext();
   const { host, session, cookie, env, next } = value;
+  const [cacheState,clearCache] = useState<{}>()
   const { pathname } = useLocation();
   return (
     <html lang="ja">
       <EnvProvider value={env}>
         <StoreProvider initState={() => ({ host, user: session })}>
-          <UrqlProvider host={host} cookie={cookie} next={next}>
-            <HeadProvider>
-              <head>
-                <style type="text/css">{css}</style>
-                <Meta />
-                <Links />
-                <GoogleAnalytics />
-                <RootValue value={{ session, env }} />
-                <NextSSRWait>
-                  <HeadRoot />
-                </NextSSRWait>
-                <CloudflareFonts href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" />
-              </head>
-              <body>
-                <div className={"flex h-screen flex-col"}>
-                  <Header />
-                  <main
-                    className={`
+          <AppProvider value={{ clearCache: () => clearCache({}) }}>
+            <UrqlProvider
+              host={host}
+              cookie={cookie}
+              next={next}
+              cacheState={cacheState}
+            >
+              <HeadProvider>
+                <head>
+                  <style type="text/css">{css}</style>
+                  <Meta />
+                  <Links />
+                  <GoogleAnalytics />
+                  <RootValue value={{ session, env }} />
+                  <NextSSRWait>
+                    <HeadRoot />
+                  </NextSSRWait>
+                  <CloudflareFonts href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" />
+                </head>
+                <body>
+                  <div className={"flex h-screen flex-col"}>
+                    <Header />
+                    <main
+                      className={`
                       relative flex-1 overflow-hidden opacity-100
                       transition-opacity duration-200 ease-in-out
                       starting:opacity-50
                     `}
-                    key={pathname}
-                  >
-                    {children}
-                  </main>
-                  <LoadingContainer />
-                  <NotificationContainer />
-                </div>
-                <ScrollRestoration />
-                <Scripts />
-              </body>
-            </HeadProvider>
-          </UrqlProvider>
+                      key={pathname}
+                    >
+                      {children}
+                    </main>
+                    <LoadingContainer />
+                    <NotificationContainer />
+                  </div>
+                  <ScrollRestoration />
+                  <Scripts />
+                </body>
+              </HeadProvider>
+            </UrqlProvider>
+          </AppProvider>
         </StoreProvider>
       </EnvProvider>
     </html>

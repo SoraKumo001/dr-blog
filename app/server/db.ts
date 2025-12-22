@@ -31,11 +31,11 @@ export const db: NodePgDatabase<typeof relations, typeof relations> = new Proxy<
   get(_target: unknown, props: keyof NodePgDatabase) {
     const context = getContext<Env>();
     if (!context.get("db")) {
-      const connectionString = process.env.DATABASE_URL;
+      const connectionString = context.env.database.connectionString;
       if (!connectionString) {
         throw new Error("DATABASE_URL is not set");
       }
-      const url = new URL(connectionString);
+      const url = new URL(process.env.DATABASE_URL);
       const searchPath = url.searchParams.get("schema") ?? "public";
       const db = drizzle({
         connection: {
@@ -43,16 +43,16 @@ export const db: NodePgDatabase<typeof relations, typeof relations> = new Proxy<
           options: `--search_path=${searchPath}`,
         },
         relations,
-        // logger: {
-        //   logQuery: (query, params) => {
-        //     console.info(
-        //       "===========================\n",
-        //       format(query, { language: "postgresql" }),
-        //       "\n--\n",
-        //       params
-        //     );
-        //   },
-        // },
+        logger: {
+          logQuery: (query, params) => {
+            console.info(
+              "===========================\n",
+              format(query, { language: "postgresql" }),
+              "\n--\n",
+              params
+            );
+          },
+        },
       });
       context.set("db", db);
     }

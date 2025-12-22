@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { getImages } from "./getImages";
 import * as schema from "~/db/schema";
@@ -22,14 +24,21 @@ export const importFile = async ({ file }: { file: string }) => {
       .returning();
 
     await db.transaction(async (tx) => {
+      const users = await tx.query.user.findMany();
       for (const value of data.users) {
-        await tx
-          .insert(schema.user)
-          .values(value)
-          .onConflictDoUpdate({
-            target: schema.user.id,
-            set: { ...value, email: "a@a" },
-          });
+        const conflictUsers = users.filter(
+          (user) => user.email === value.email
+        );
+        for (const { id } of conflictUsers) {
+          await tx
+            .update(schema.user)
+            .set({ email: crypto.randomUUID() })
+            .where(eq(schema.user.id, id));
+        }
+        await tx.insert(schema.user).values(value).onConflictDoUpdate({
+          target: schema.user.id,
+          set: value,
+        });
       }
     });
 

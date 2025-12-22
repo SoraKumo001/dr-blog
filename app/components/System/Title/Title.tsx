@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import type { FC, ReactNode } from "react";
 import { Head } from "~/components/Commons/Head";
 import { useEnv } from "~/components/Provider/EnvProvider";
-import { useFindSystemQuery } from "~/generated/graphql";
+import { useSystem } from "~/hooks/useSystem";
 import { useSelector } from "~/libs/context";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
  * @param {Props} { }
  */
 export const Title: FC<Props> = ({ image, children }) => {
-  const [{ data }] = useFindSystemQuery();
+  const [{ data }] = useSystem();
   const host = useSelector((state: { host?: string }) => state.host);
   const env = useEnv();
   const OGP_URL = env["NEXT_PUBLIC_OGP_URL"];

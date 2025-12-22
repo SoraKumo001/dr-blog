@@ -1,12 +1,9 @@
 import { type FC, useMemo } from "react";
 import { PostList } from "../../PostList";
 import { Title } from "../../System/Title";
-import {
-  useFindPostsQuery,
-  useFindSystemQuery,
-  type FindPostsQuery,
-} from "~/generated/graphql";
+import { useFindPostsQuery, type FindPostsQuery } from "~/generated/graphql";
 import { useLoading } from "~/hooks/useLoading";
+import { useSystem } from "~/hooks/useSystem";
 
 interface Props {}
 
@@ -16,7 +13,7 @@ interface Props {}
  * @param {Props} { }
  */
 export const TopPage: FC<Props> = ({}) => {
-  const [{ data: dataSystem }] = useFindSystemQuery();
+  const [{ data: dataSystem }] = useSystem();
   const [{ fetching, data }] = useFindPostsQuery();
   const posts = useMemo(() => {
     if (!data?.findManyPost) return undefined;

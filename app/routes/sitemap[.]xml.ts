@@ -3,7 +3,7 @@ import { db } from "~/server/db";
 
 export const action = () => null;
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const host = request.headers.get("host") ?? "";
   let xml = `<?xml version="1.0" encoding="UTF-8"?>`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;

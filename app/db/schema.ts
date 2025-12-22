@@ -1,14 +1,19 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
-  pgTable,
   primaryKey,
   text,
   timestamp,
   uuid,
+  pgSchema,
 } from "drizzle-orm/pg-core";
 
-export const user = pgTable("User", {
+const url = new URL(process.env.DATABASE_URL);
+const searchPath = url.searchParams.get("schema") ?? "public";
+
+const schema = pgSchema(searchPath);
+
+export const user = schema.table("User", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   email: text().notNull().unique(),
   name: text().notNull().default("User"),
@@ -16,7 +21,7 @@ export const user = pgTable("User", {
   updatedAt: timestamp({ precision: 3 }).notNull().defaultNow(),
 });
 
-export const post = pgTable("Post", {
+export const post = schema.table("Post", {
   id: text()
     .notNull()
     .primaryKey()
@@ -41,7 +46,7 @@ export const post = pgTable("Post", {
     .defaultNow(),
 });
 
-export const category = pgTable("Category", {
+export const category = schema.table("Category", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   name: text().notNull(),
   createdAt: timestamp("createdAt", { precision: 3 }).notNull().defaultNow(),
@@ -51,7 +56,7 @@ export const category = pgTable("Category", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const system = pgTable("System", {
+export const system = schema.table("System", {
   id: text().notNull().primaryKey(),
   title: text().notNull(),
   description: text().notNull(),
@@ -70,7 +75,7 @@ export const system = pgTable("System", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const fireStore = pgTable("FireStore", {
+export const fireStore = schema.table("FireStore", {
   id: text().notNull().primaryKey(),
   name: text().notNull(),
   mimeType: text().notNull(),
@@ -81,7 +86,7 @@ export const fireStore = pgTable("FireStore", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const categoryToPost = pgTable(
+export const categoryToPost = schema.table(
   "CategoryToPost",
   {
     postId: text()
@@ -99,7 +104,7 @@ export const categoryToPost = pgTable(
   (t) => [primaryKey({ columns: [t.postId, t.categoryId] })]
 );
 
-export const fireStoreToPost = pgTable(
+export const fireStoreToPost = schema.table(
   "FireStoreToPost",
   {
     postId: text()

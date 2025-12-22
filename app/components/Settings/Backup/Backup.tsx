@@ -1,6 +1,7 @@
 import { Checkbox } from "react-daisyui";
 import type { FC } from "react";
 import { FieldSet } from "~/components/Commons/FieldSet";
+import { useApp } from "~/components/Provider/AppProvider";
 import {
   useBackupMutation,
   useBucketQuery,
@@ -30,6 +31,7 @@ export const Backup: FC<Props> = () => {
   const [{ fetching: mutationCorsFetching }, updateCors] =
     useUpdateCorsMutation();
   const notification = useNotification();
+  const { clearCache } = useApp();
   const handleRestore = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -82,6 +84,7 @@ export const Backup: FC<Props> = () => {
             notification(error.message);
           } else {
             notification("リストアしました");
+            clearCache();
           }
         });
       }

@@ -20,11 +20,13 @@ export const UrqlProvider = ({
   host,
   cookie,
   children,
+  cacheState,
   next,
 }: {
   host?: string;
   cookie?: string;
   children: ReactNode;
+  cacheState?: object;
   next: typeof fetch;
 }) => {
   const session = useUser();
@@ -48,7 +50,8 @@ export const UrqlProvider = ({
         fetchExchange,
       ],
     });
-  }, [host, nextSSRExchange, session, cookie, next]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [host, nextSSRExchange, session, cookie, next, cacheState]);
   return (
     <Provider value={client}>
       <NextSSRProvider>{children}</NextSSRProvider>

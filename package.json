@@ -22,7 +22,7 @@
     "drizzle:migrate": "tsx tools/change-schema && drizzle-kit migrate && tsx tools/change-schema public",
     "drizzle:reset": "tsx tools/reset.ts && npm run drizzle:migrate",
     "graphql:schema": "tsx --tsconfig tsconfig.cloudflare.json ./tools/exportSchema.ts",
-    "log": "wrangler tail cloud-blog"
+    "log": "wrangler tail dr-blog"
   },
   "dependencies": {
     "@firebase/app": "^0.14.6",
@@ -84,6 +84,7 @@
     "@types/hast": "3.0.4",
     "@types/mdast": "^4.0.4",
     "@types/node": "25.0.3",
+    "@types/pg": "8.16.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/react-syntax-highlighter": "^15.5.13",
@@ -122,7 +123,7 @@
   },
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/SoraKumo001/cloud-blog",
   "author": "SoraKumo <info@croud.jp>",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "https://github.com/SoraKumo001/dr-blog.git"
 }
