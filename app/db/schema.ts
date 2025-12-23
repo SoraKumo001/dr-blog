@@ -10,18 +10,20 @@ import {
   type PgTableFn,
 } from "drizzle-orm/pg-core";
 
-const url = new URL(process.env.DATABASE_URL);
-const searchPath = !process.env["npm_lifecycle_script"]?.startsWith(
-  "drizzle-kit generate"
-)
-  ? url.searchParams.get("schema")
-  : undefined;
+const createSchemaTable = (): PgTableFn<string | undefined> => {
+  if (process.argv[2] !== "generate" && process.env.DATABASE_URL) {
+    const url = new URL(process.env.DATABASE_URL);
+    const searchPath = url.searchParams.get("schema");
+    if (searchPath) {
+      return pgSchema(searchPath).table;
+    }
+  }
+  return pgTable;
+};
 
-const createTable = searchPath
-  ? pgSchema(searchPath).table
-  : (pgTable as unknown as PgTableFn<string>);
+const table = createSchemaTable();
 
-export const user = createTable("User", {
+export const user = table("User", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   email: text().notNull().unique(),
   name: text().notNull().default("User"),
@@ -29,7 +31,7 @@ export const user = createTable("User", {
   updatedAt: timestamp({ precision: 3 }).notNull().defaultNow(),
 });
 
-export const post = createTable("Post", {
+export const post = table("Post", {
   id: text()
     .notNull()
     .primaryKey()
@@ -54,7 +56,7 @@ export const post = createTable("Post", {
     .defaultNow(),
 });
 
-export const category = createTable("Category", {
+export const category = table("Category", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   name: text().notNull(),
   createdAt: timestamp("createdAt", { precision: 3 }).notNull().defaultNow(),
@@ -64,7 +66,7 @@ export const category = createTable("Category", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const system = createTable("System", {
+export const system = table("System", {
   id: text().notNull().primaryKey(),
   title: text().notNull(),
   description: text().notNull(),
@@ -83,7 +85,7 @@ export const system = createTable("System", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const fireStore = createTable("FireStore", {
+export const fireStore = table("FireStore", {
   id: text().notNull().primaryKey(),
   name: text().notNull(),
   mimeType: text().notNull(),
@@ -94,7 +96,7 @@ export const fireStore = createTable("FireStore", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const categoryToPost = createTable(
+export const categoryToPost = table(
   "CategoryToPost",
   {
     postId: text()
@@ -112,7 +114,7 @@ export const categoryToPost = createTable(
   (t) => [primaryKey({ columns: [t.postId, t.categoryId] })]
 );
 
-export const fireStoreToPost = createTable(
+export const fireStoreToPost = table(
   "FireStoreToPost",
   {
     postId: text()

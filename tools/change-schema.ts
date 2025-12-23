@@ -19,7 +19,7 @@ const main = async () => {
     `DO $$ BEGIN EXECUTE format('ALTER ROLE %I SET search_path TO ${schema}', current_user); END; $$;`
   );
   db.$client.end();
-  console.info(`search_path ${schema}`);
+  console.info(`\nsearch_path ${schema}`);
 };
 
 main();
