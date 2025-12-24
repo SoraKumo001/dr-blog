@@ -1,8 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BasePlugin, type BuildCache, type SchemaTypes } from "@pothos/core";
 import { and, eq, sql } from "drizzle-orm";
-import { DrizzleGenerator } from "./generator.js";
-import { createWhereQuery, getQueryDepth } from "./libs/utils.js";
+import {
+  DrizzleGenerator,
+  getReturning,
+  replaceColumnValues,
+} from "./generator.js";
+import {
+  createWhereQuery,
+  getQueryDepth,
+  getQueryFields,
+} from "./libs/utils.js";
 import type { DrizzleObjectRef } from "@pothos/plugin-drizzle";
 import type { GraphQLResolveInfo } from "graphql";
 
@@ -42,24 +50,6 @@ export class PothosDrizzleGenerator<
         depthLimit,
       },
     ] of Object.entries(tables)) {
-      const objectRef = builder.objectRef(`${tableInfo.name}_`);
-      objectRef.implement({
-        fields: (t) =>
-          Object.fromEntries(
-            columns.map((c) => {
-              return [
-                c.name,
-                t.expose(
-                  c.name as never,
-                  {
-                    type: generator.getDataType(c),
-                    nullable: !c.notNull,
-                  } as never
-                ),
-              ];
-            })
-          ),
-      });
       const filterRelations = Object.entries(relations).filter(
         ([, relay]) => tables[relay.targetTableName]
       );
@@ -103,6 +93,7 @@ export class PothosDrizzleGenerator<
                   ) {
                     throw new Error("No permission");
                   }
+                  //  const requestColumns = getQueryFields(info);
                   const p = {
                     limit: limit?.({ modelName, ctx, operation }),
                     where: where?.({ modelName, ctx, operation }),
@@ -110,6 +101,7 @@ export class PothosDrizzleGenerator<
                   };
                   return {
                     ...args,
+                    _name: modelName,
                     limit:
                       p.limit && args.limit
                         ? Math.min(p.limit, args.limit)
@@ -294,22 +286,27 @@ export class PothosDrizzleGenerator<
                 return (generator.getClient(ctx) as any).query[
                   modelName
                 ].findMany(
-                  query({
-                    ...args,
-                    limit:
-                      p.limit && args.limit
-                        ? Math.min(p.limit, args.limit)
-                        : p.limit ?? args.limit,
-                    where: {
-                      AND: [structuredClone(args.where), p.where].filter(
-                        (v) => v
-                      ),
-                    },
-                    orderBy:
-                      args.orderBy && Object.keys(args.orderBy).length
-                        ? args.orderBy
-                        : p.orderBy,
-                  })
+                  replaceColumnValues(
+                    tables,
+                    modelName,
+                    getQueryFields(info),
+                    query({
+                      ...args,
+                      limit:
+                        p.limit && args.limit
+                          ? Math.min(p.limit, args.limit)
+                          : p.limit ?? args.limit,
+                      where: {
+                        AND: [structuredClone(args.where), p.where].filter(
+                          (v) => v
+                        ),
+                      },
+                      orderBy:
+                        args.orderBy && Object.keys(args.orderBy).length
+                          ? args.orderBy
+                          : p.orderBy,
+                    })
+                  )
                 );
               },
             } as never),
@@ -356,18 +353,23 @@ export class PothosDrizzleGenerator<
                 return (generator.getClient(ctx) as any).query[
                   modelName
                 ].findFirst(
-                  query({
-                    ...args,
-                    where: {
-                      AND: [structuredClone(args.where), p.where].filter(
-                        (v) => v
-                      ),
-                    },
-                    orderBy:
-                      args.orderBy && Object.keys(args.orderBy).length
-                        ? args.orderBy
-                        : p.orderBy,
-                  })
+                  replaceColumnValues(
+                    tables,
+                    modelName,
+                    getQueryFields(info),
+                    query({
+                      ...args,
+                      where: {
+                        AND: [structuredClone(args.where), p.where].filter(
+                          (v) => v
+                        ),
+                      },
+                      orderBy:
+                        args.orderBy && Object.keys(args.orderBy).length
+                          ? args.orderBy
+                          : p.orderBy,
+                    })
+                  )
                 );
               },
             } as never),
@@ -440,7 +442,7 @@ export class PothosDrizzleGenerator<
               nullable: false,
               args: { input: t.arg({ type: inputCreate, required: true }) },
               resolve: async (
-                _query: any,
+                query: any,
                 _parent: any,
                 args: any,
                 ctx: any,
@@ -465,11 +467,18 @@ export class PothosDrizzleGenerator<
                   getQueryDepth(info) > p.depthLimit
                 )
                   throw new Error("Depth limit exceeded");
-                return (generator.getClient(ctx) as any)
-                  .insert(table)
-                  .values({ ...args.input, ...p.input })
-                  .returning()
-                  .then((v: any) => v[0]);
+                query({});
+                const returning = getReturning(info, columns);
+                return returning
+                  ? (generator.getClient(ctx) as any)
+                      .insert(table)
+                      .values({ ...args.input, ...p.input })
+                      .returning(returning)
+                      .then((v: any) => v[0])
+                  : (generator.getClient(ctx) as any)
+                      .insert(table)
+                      .values({ ...args.input, ...p.input })
+                      .then(() => ({}));
               },
             } as never),
           }),
@@ -483,7 +492,7 @@ export class PothosDrizzleGenerator<
               nullable: false,
               args: { input: t.arg({ type: [inputCreate], required: true }) },
               resolve: async (
-                _query: any,
+                query: any,
                 _parent: any,
                 args: any,
                 ctx: any,
@@ -509,10 +518,19 @@ export class PothosDrizzleGenerator<
                 )
                   throw new Error("Depth limit exceeded");
                 if (!args.input.length) return [];
-                return (generator.getClient(ctx) as any)
-                  .insert(table)
-                  .values(args.input.map((v: any) => ({ ...v, ...p.args })))
-                  .returning();
+                query({});
+                const returning = getReturning(info, columns);
+                return returning
+                  ? (generator.getClient(ctx) as any)
+                      .insert(table)
+                      .values(args.input.map((v: any) => ({ ...v, ...p.args })))
+                      .returning(returning)
+                  : (generator.getClient(ctx) as any)
+                      .insert(table)
+                      .values(args.input.map((v: any) => ({ ...v, ...p.args })))
+                      .then((v: { rowCount: number }) =>
+                        Array(v.rowCount).fill({})
+                      );
               },
             } as never),
           }),
@@ -529,7 +547,7 @@ export class PothosDrizzleGenerator<
                 where: t.arg({ type: inputWhere }),
               },
               resolve: async (
-                _query: any,
+                query: any,
                 _parent: any,
                 args: any,
                 ctx: any,
@@ -554,17 +572,33 @@ export class PothosDrizzleGenerator<
                   getQueryDepth(info) > p.depthLimit
                 )
                   throw new Error("Depth limit exceeded");
-                return (generator.getClient(ctx) as any)
-                  .update(table)
-                  .set(args.input)
-                  .where(
-                    createWhereQuery(table, {
-                      AND: [structuredClone(args.where), p.where].filter(
-                        (v) => v
-                      ),
-                    } as never)
-                  )
-                  .returning();
+                query({});
+                const returning = getReturning(info, columns);
+                return returning
+                  ? (generator.getClient(ctx) as any)
+                      .update(table)
+                      .set(args.input)
+                      .where(
+                        createWhereQuery(table, {
+                          AND: [structuredClone(args.where), p.where].filter(
+                            (v) => v
+                          ),
+                        } as never)
+                      )
+                      .returning(returning)
+                  : (generator.getClient(ctx) as any)
+                      .update(table)
+                      .set(args.input)
+                      .where(
+                        createWhereQuery(table, {
+                          AND: [structuredClone(args.where), p.where].filter(
+                            (v) => v
+                          ),
+                        } as never)
+                      )
+                      .then((v: { rowCount: number }) =>
+                        Array(v.rowCount).fill({})
+                      );
               },
             } as never),
           }),
@@ -580,7 +614,7 @@ export class PothosDrizzleGenerator<
                 where: t.arg({ type: inputWhere }),
               },
               resolve: async (
-                _query: any,
+                query: any,
                 _parent: any,
                 args: any,
                 ctx: any,
@@ -605,16 +639,31 @@ export class PothosDrizzleGenerator<
                   getQueryDepth(info) > p.depthLimit
                 )
                   throw new Error("Depth limit exceeded");
-                return (generator.getClient(ctx) as any)
-                  .delete(table)
-                  .where(
-                    createWhereQuery(table, {
-                      AND: [structuredClone(args.where), p.where].filter(
-                        (v) => v
-                      ),
-                    } as never)
-                  )
-                  .returning();
+                query({});
+                const returning = getReturning(info, columns);
+                return returning
+                  ? (generator.getClient(ctx) as any)
+                      .delete(table)
+                      .where(
+                        createWhereQuery(table, {
+                          AND: [structuredClone(args.where), p.where].filter(
+                            (v) => v
+                          ),
+                        } as never)
+                      )
+                      .returning(returning)
+                  : (generator.getClient(ctx) as any)
+                      .delete(table)
+                      .where(
+                        createWhereQuery(table, {
+                          AND: [structuredClone(args.where), p.where].filter(
+                            (v) => v
+                          ),
+                        } as never)
+                      )
+                      .then((v: { rowCount: number }) =>
+                        Array(v.rowCount).fill({})
+                      );
               },
             } as never),
           }),
