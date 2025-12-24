@@ -19,7 +19,9 @@ export function getQueryDepth(info: GraphQLResolveInfo): number {
   return getDepthFromSelection(info.fieldNodes[0], 0);
 }
 
-export interface FieldTree extends Record<string, boolean | FieldTree> {}
+export interface FieldTree {
+  [key: string]: boolean | FieldTree;
+}
 
 export const getQueryFragment = (
   info: GraphQLResolveInfo,

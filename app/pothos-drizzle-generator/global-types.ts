@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { Operation, OperationBasic } from "./libs/operations.js";
 import type { PothosDrizzleGenerator } from "./PothosDrizzleGenerator.js";
@@ -9,7 +8,7 @@ import type {
   RelationsFilter,
   SchemaEntry,
 } from "drizzle-orm";
-import type { PgTable, PgUpdateSetSource } from "drizzle-orm/pg-core";
+import type { PgInsertValue, PgTable } from "drizzle-orm/pg-core";
 
 declare global {
   export namespace PothosSchemaTypes {
@@ -87,7 +86,7 @@ declare global {
             modelName: U;
             operation: (typeof OperationBasic)[number];
           }) =>
-            | RelationsFilter<Relations<Types>[U], Relations<Types>>
+            | RelationsFilter<Relations<Types>[any], Relations<Types>>
             | undefined;
           inputFields?: <U extends TableNames<Types>>(params: {
             modelName: U;
@@ -106,10 +105,9 @@ declare global {
             modelName: U;
             operation: (typeof OperationBasic)[number];
           }) =>
-            | PgUpdateSetSource<
-                Relations<Types>[U]["table"] extends PgTable
-                  ? Relations<Types>[U]["table"]
-                  : never
+            | PgInsertValue<
+                AnyTable<Types> extends PgTable ? AnyTable<Types> : never,
+                true
               >
             | undefined;
         };
@@ -162,14 +160,13 @@ declare global {
               | {
                   exclude: Columns<Types, U>[];
                   include?: undefined;
-                }
-              | undefined;
+                };
             inputData?: (params: {
               ctx: Types["Context"];
               modelName: U;
               operation: (typeof OperationBasic)[number];
             }) =>
-              | PgUpdateSetSource<
+              | PgInsertValue<
                   Relations<Types>[U]["table"] extends PgTable<any>
                     ? Relations<Types>[U]["table"]
                     : never
