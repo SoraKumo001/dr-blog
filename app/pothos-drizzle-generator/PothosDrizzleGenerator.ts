@@ -75,14 +75,14 @@ export class PothosDrizzleGenerator<
                   offset: t.arg({ type: "Int" }),
                   limit: t.arg({ type: "Int" }),
                   where: t.arg({ type: inputWhere }),
-                  orderBy: t.arg({ type: inputOrderBy }),
+                  orderBy: t.arg({ type: [inputOrderBy] }),
                 },
                 query: (
                   args: {
                     where?: object;
                     offset?: number;
                     limit?: number;
-                    orderBy?: object;
+                    orderBy?: object[];
                   },
                   ctx: object
                 ) => {
@@ -114,7 +114,9 @@ export class PothosDrizzleGenerator<
                     },
                     orderBy:
                       args.orderBy && Object.keys(args.orderBy).length
-                        ? args.orderBy
+                        ? Object.fromEntries(
+                            args.orderBy.flatMap((v) => Object.entries(v))
+                          )
                         : p.orderBy,
                   };
                 },
@@ -260,12 +262,12 @@ export class PothosDrizzleGenerator<
                 offset: t.arg({ type: "Int" }),
                 limit: t.arg({ type: "Int" }),
                 where: t.arg({ type: inputWhere }),
-                orderBy: t.arg({ type: inputOrderBy }),
+                orderBy: t.arg({ type: [inputOrderBy] }),
               },
               resolve: async (
                 query: (selection: unknown) => object,
                 _parent: unknown,
-                args: { limit?: number; where: object; orderBy?: object },
+                args: { limit?: number; where: object; orderBy?: object[] },
                 ctx: object,
                 info: GraphQLResolveInfo
               ) => {
@@ -309,7 +311,9 @@ export class PothosDrizzleGenerator<
                       },
                       orderBy:
                         args.orderBy && Object.keys(args.orderBy).length
-                          ? args.orderBy
+                          ? Object.fromEntries(
+                              args.orderBy.flatMap((v) => Object.entries(v))
+                            )
                           : p.orderBy,
                     })
                   ) as never
@@ -327,7 +331,7 @@ export class PothosDrizzleGenerator<
               args: {
                 offset: t.arg({ type: "Int" }),
                 where: t.arg({ type: inputWhere }),
-                orderBy: t.arg({ type: inputOrderBy }),
+                orderBy: t.arg({ type: [inputOrderBy] }),
               },
               resolve: async (
                 query: (selection: unknown) => object,
@@ -335,7 +339,7 @@ export class PothosDrizzleGenerator<
                 args: {
                   limit?: number;
                   where: object;
-                  orderBy?: object;
+                  orderBy?: object[];
                   offset?: number;
                 },
                 ctx: object,
@@ -375,7 +379,9 @@ export class PothosDrizzleGenerator<
                       },
                       orderBy:
                         args.orderBy && Object.keys(args.orderBy).length
-                          ? args.orderBy
+                          ? Object.fromEntries(
+                              args.orderBy.flatMap((v) => Object.entries(v))
+                            )
                           : p.orderBy,
                     })
                   ) as never
@@ -475,8 +481,11 @@ export class PothosDrizzleGenerator<
                   getQueryDepth(info) > p.depthLimit
                 )
                   throw new Error("Depth limit exceeded");
-                query({});
-                const returning = getReturning(info, columns);
+                const { returning, isRelay } = getReturning(info, columns);
+                if (!isRelay) {
+                  query({});
+                }
+
                 return returning
                   ? generator
                       .getClient(ctx)
@@ -528,8 +537,11 @@ export class PothosDrizzleGenerator<
                 )
                   throw new Error("Depth limit exceeded");
                 if (!args.input.length) return [];
-                query({});
-                const returning = getReturning(info, columns);
+                const { returning, isRelay } = getReturning(info, columns);
+                if (!isRelay) {
+                  query({});
+                }
+
                 return returning
                   ? generator
                       .getClient(ctx)
@@ -585,8 +597,11 @@ export class PothosDrizzleGenerator<
                   getQueryDepth(info) > p.depthLimit
                 )
                   throw new Error("Depth limit exceeded");
-                query({});
-                const returning = getReturning(info, columns);
+
+                const { returning, isRelay } = getReturning(info, columns);
+                if (!isRelay) {
+                  query({});
+                }
                 return returning
                   ? generator
                       .getClient(ctx)
@@ -652,8 +667,38 @@ export class PothosDrizzleGenerator<
                   getQueryDepth(info) > p.depthLimit
                 )
                   throw new Error("Depth limit exceeded");
+                const { returning, isRelay } = getReturning(info, columns);
+                if (isRelay) {
+                  const result = await generator
+                    .getQueryTable(ctx, modelName)
+                    .findMany(
+                      replaceColumnValues(
+                        tables,
+                        modelName,
+                        getQueryFields(info),
+                        query({
+                          ...args,
+                          where: {
+                            AND: [structuredClone(args.where), p.where].filter(
+                              (v) => v
+                            ),
+                          },
+                        })
+                      ) as never
+                    );
+                  await generator
+                    .getClient(ctx)
+                    .delete(table as never)
+                    .where(
+                      createWhereQuery(table, {
+                        AND: [structuredClone(args.where), p.where].filter(
+                          (v) => v
+                        ),
+                      } as never)
+                    );
+                  return result;
+                }
                 query({});
-                const returning = getReturning(info, columns);
                 return returning
                   ? generator
                       .getClient(ctx)
