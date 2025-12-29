@@ -62,13 +62,15 @@ input CategoryCreate {
   name: String!
   createdAt: DateTime
   updatedAt: DateTime
+  posts: Category_posts
 }
 
-input CategoryInput {
+input CategoryUpdate {
   id: String
   name: String
   createdAt: DateTime
   updatedAt: DateTime
+  posts: Category_posts
 }
 
 input CategoryToPostWhere {
@@ -89,7 +91,7 @@ input CategoryToPostCreate {
   categoryId: String!
 }
 
-input CategoryToPostInput {
+input CategoryToPostUpdate {
   postId: String
   categoryId: String
 }
@@ -119,14 +121,16 @@ input FireStoreCreate {
   mimeType: String!
   createdAt: DateTime
   updatedAt: DateTime
+  posts: FireStore_posts
 }
 
-input FireStoreInput {
+input FireStoreUpdate {
   id: String
   name: String
   mimeType: String
   createdAt: DateTime
   updatedAt: DateTime
+  posts: FireStore_posts
 }
 
 input FireStoreToPostWhere {
@@ -147,7 +151,7 @@ input FireStoreToPostCreate {
   fireStoreId: String!
 }
 
-input FireStoreToPostInput {
+input FireStoreToPostUpdate {
   postId: String
   fireStoreId: String
 }
@@ -189,9 +193,11 @@ input PostCreate {
   createdAt: DateTime
   updatedAt: DateTime
   publishedAt: DateTime
+  categories: Post_categories
+  postFiles: Post_postFiles
 }
 
-input PostInput {
+input PostUpdate {
   id: String
   published: Boolean
   title: String
@@ -201,6 +207,8 @@ input PostInput {
   createdAt: DateTime
   updatedAt: DateTime
   publishedAt: DateTime
+  categories: Post_categories
+  postFiles: Post_postFiles
 }
 
 input SystemWhere {
@@ -236,7 +244,7 @@ input SystemCreate {
   updatedAt: DateTime
 }
 
-input SystemInput {
+input SystemUpdate {
   id: String
   title: String
   description: String
@@ -273,7 +281,7 @@ input UserCreate {
   updatedAt: DateTime
 }
 
-input UserInput {
+input UserUpdate {
   id: String
   email: String
   name: String
@@ -321,6 +329,22 @@ input DateTimeInputOperator {
   arrayContains: [DateTime!]
 }
 
+input Category_postsSet {
+  id: String!
+}
+
+input Category_posts {
+  set: [Category_postsSet!]
+}
+
+input FireStore_postsSet {
+  id: String!
+}
+
+input FireStore_posts {
+  set: [FireStore_postsSet!]
+}
+
 input BooleanInputOperator {
   eq: Boolean
   ne: Boolean
@@ -339,6 +363,22 @@ input BooleanInputOperator {
   arrayContained: [Boolean!]
   arrayOverlaps: [Boolean!]
   arrayContains: [Boolean!]
+}
+
+input Post_categoriesSet {
+  id: String!
+}
+
+input Post_categories {
+  set: [Post_categoriesSet!]
+}
+
+input Post_postFilesSet {
+  id: String!
+}
+
+input Post_postFiles {
+  set: [Post_postFilesSet!]
 }
 
 type EncryptionObject {
@@ -369,42 +409,22 @@ type BucketObject {
   cors: [CorsObject!]
 }
 
-type Category_ {
-  id: String!
-  name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type Category {
   postsCount(where: PostWhere): Int!
-  posts(offset: Int, limit: Int, where: PostWhere, orderBy: PostOrderBy): [Post!]!
+  posts(offset: Int, limit: Int, where: PostWhere, orderBy: [PostOrderBy!]): [Post!]!
   id: String!
   name: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-type CategoryToPost_ {
-  postId: String!
-  categoryId: String!
 }
 
 type CategoryToPost {
   postCount(where: PostWhere): Int!
   categoryCount(where: CategoryWhere): Int!
-  post(offset: Int, limit: Int, where: PostWhere, orderBy: PostOrderBy): Post
-  category(offset: Int, limit: Int, where: CategoryWhere, orderBy: CategoryOrderBy): Category
+  post(offset: Int, limit: Int, where: PostWhere, orderBy: [PostOrderBy!]): Post
+  category(offset: Int, limit: Int, where: CategoryWhere, orderBy: [CategoryOrderBy!]): Category
   postId: String!
   categoryId: String!
-}
-
-type FireStore_ {
-  id: String!
-  name: String!
-  mimeType: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 type FireStore {
@@ -412,10 +432,10 @@ type FireStore {
   systemCardsCount(where: SystemWhere): Int!
   postCardsCount(where: PostWhere): Int!
   postsCount(where: PostWhere): Int!
-  systemIcons(offset: Int, limit: Int, where: SystemWhere, orderBy: SystemOrderBy): [System!]!
-  systemCards(offset: Int, limit: Int, where: SystemWhere, orderBy: SystemOrderBy): [System!]!
-  postCards(offset: Int, limit: Int, where: PostWhere, orderBy: PostOrderBy): [Post!]!
-  posts(offset: Int, limit: Int, where: PostWhere, orderBy: PostOrderBy): [Post!]!
+  systemIcons(offset: Int, limit: Int, where: SystemWhere, orderBy: [SystemOrderBy!]): [System!]!
+  systemCards(offset: Int, limit: Int, where: SystemWhere, orderBy: [SystemOrderBy!]): [System!]!
+  postCards(offset: Int, limit: Int, where: PostWhere, orderBy: [PostOrderBy!]): [Post!]!
+  posts(offset: Int, limit: Int, where: PostWhere, orderBy: [PostOrderBy!]): [Post!]!
   id: String!
   name: String!
   mimeType: String!
@@ -423,30 +443,13 @@ type FireStore {
   updatedAt: DateTime!
 }
 
-type FireStoreToPost_ {
-  postId: String!
-  fireStoreId: String!
-}
-
 type FireStoreToPost {
   postCount(where: PostWhere): Int!
   fireStoreCount(where: FireStoreWhere): Int!
-  post(offset: Int, limit: Int, where: PostWhere, orderBy: PostOrderBy): Post
-  fireStore(offset: Int, limit: Int, where: FireStoreWhere, orderBy: FireStoreOrderBy): FireStore
+  post(offset: Int, limit: Int, where: PostWhere, orderBy: [PostOrderBy!]): Post
+  fireStore(offset: Int, limit: Int, where: FireStoreWhere, orderBy: [FireStoreOrderBy!]): FireStore
   postId: String!
   fireStoreId: String!
-}
-
-type Post_ {
-  id: String!
-  published: Boolean!
-  title: String!
-  content: String!
-  authorId: String!
-  cardId: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  publishedAt: DateTime!
 }
 
 type Post {
@@ -454,10 +457,10 @@ type Post {
   cardCount(where: FireStoreWhere): Int!
   categoriesCount(where: CategoryWhere): Int!
   postFilesCount(where: FireStoreWhere): Int!
-  author(offset: Int, limit: Int, where: UserWhere, orderBy: UserOrderBy): User
-  card(offset: Int, limit: Int, where: FireStoreWhere, orderBy: FireStoreOrderBy): FireStore
-  categories(offset: Int, limit: Int, where: CategoryWhere, orderBy: CategoryOrderBy): [Category!]!
-  postFiles(offset: Int, limit: Int, where: FireStoreWhere, orderBy: FireStoreOrderBy): [FireStore!]!
+  author(offset: Int, limit: Int, where: UserWhere, orderBy: [UserOrderBy!]): User
+  card(offset: Int, limit: Int, where: FireStoreWhere, orderBy: [FireStoreOrderBy!]): FireStore
+  categories(offset: Int, limit: Int, where: CategoryWhere, orderBy: [CategoryOrderBy!]): [Category!]!
+  postFiles(offset: Int, limit: Int, where: FireStoreWhere, orderBy: [FireStoreOrderBy!]): [FireStore!]!
   id: String!
   published: Boolean!
   title: String!
@@ -469,41 +472,23 @@ type Post {
   publishedAt: DateTime!
 }
 
-type System_ {
-  id: String!
-  title: String!
-  description: String!
-  iconId: String
-  cardId: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type System {
   iconCount(where: FireStoreWhere): Int!
   cardCount(where: FireStoreWhere): Int!
-  icon(offset: Int, limit: Int, where: FireStoreWhere, orderBy: FireStoreOrderBy): FireStore
-  card(offset: Int, limit: Int, where: FireStoreWhere, orderBy: FireStoreOrderBy): FireStore
+  icon(offset: Int, limit: Int, where: FireStoreWhere, orderBy: [FireStoreOrderBy!]): FireStore
+  card(offset: Int, limit: Int, where: FireStoreWhere, orderBy: [FireStoreOrderBy!]): FireStore
   id: String!
   title: String!
   description: String!
   iconId: String
   cardId: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type User_ {
-  id: String!
-  email: String!
-  name: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 type User {
   postCount(where: PostWhere): Int!
-  post(offset: Int, limit: Int, where: PostWhere, orderBy: PostOrderBy): [Post!]!
+  post(offset: Int, limit: Int, where: PostWhere, orderBy: [PostOrderBy!]): [Post!]!
   id: String!
   email: String!
   name: String!
@@ -513,65 +498,65 @@ type User {
 
 type Query {
   bucket: BucketObject
-  findManyCategory(offset: Int, limit: Int, where: CategoryWhere, orderBy: CategoryOrderBy): [Category!]!
-  findFirstCategory(offset: Int, where: CategoryWhere, orderBy: CategoryOrderBy): Category
+  findManyCategory(offset: Int, limit: Int, where: CategoryWhere, orderBy: [CategoryOrderBy!]): [Category!]!
+  findFirstCategory(offset: Int, where: CategoryWhere, orderBy: [CategoryOrderBy!]): Category
   countCategory(limit: Int, where: CategoryWhere): Int!
-  findManyCategoryToPost(offset: Int, limit: Int, where: CategoryToPostWhere, orderBy: CategoryToPostOrderBy): [CategoryToPost!]!
-  findFirstCategoryToPost(offset: Int, where: CategoryToPostWhere, orderBy: CategoryToPostOrderBy): CategoryToPost
+  findManyCategoryToPost(offset: Int, limit: Int, where: CategoryToPostWhere, orderBy: [CategoryToPostOrderBy!]): [CategoryToPost!]!
+  findFirstCategoryToPost(offset: Int, where: CategoryToPostWhere, orderBy: [CategoryToPostOrderBy!]): CategoryToPost
   countCategoryToPost(limit: Int, where: CategoryToPostWhere): Int!
-  findManyFireStore(offset: Int, limit: Int, where: FireStoreWhere, orderBy: FireStoreOrderBy): [FireStore!]!
-  findFirstFireStore(offset: Int, where: FireStoreWhere, orderBy: FireStoreOrderBy): FireStore
+  findManyFireStore(offset: Int, limit: Int, where: FireStoreWhere, orderBy: [FireStoreOrderBy!]): [FireStore!]!
+  findFirstFireStore(offset: Int, where: FireStoreWhere, orderBy: [FireStoreOrderBy!]): FireStore
   countFireStore(limit: Int, where: FireStoreWhere): Int!
-  findManyFireStoreToPost(offset: Int, limit: Int, where: FireStoreToPostWhere, orderBy: FireStoreToPostOrderBy): [FireStoreToPost!]!
-  findFirstFireStoreToPost(offset: Int, where: FireStoreToPostWhere, orderBy: FireStoreToPostOrderBy): FireStoreToPost
+  findManyFireStoreToPost(offset: Int, limit: Int, where: FireStoreToPostWhere, orderBy: [FireStoreToPostOrderBy!]): [FireStoreToPost!]!
+  findFirstFireStoreToPost(offset: Int, where: FireStoreToPostWhere, orderBy: [FireStoreToPostOrderBy!]): FireStoreToPost
   countFireStoreToPost(limit: Int, where: FireStoreToPostWhere): Int!
-  findManyPost(offset: Int, limit: Int, where: PostWhere, orderBy: PostOrderBy): [Post!]!
-  findFirstPost(offset: Int, where: PostWhere, orderBy: PostOrderBy): Post
+  findManyPost(offset: Int, limit: Int, where: PostWhere, orderBy: [PostOrderBy!]): [Post!]!
+  findFirstPost(offset: Int, where: PostWhere, orderBy: [PostOrderBy!]): Post
   countPost(limit: Int, where: PostWhere): Int!
-  findManySystem(offset: Int, limit: Int, where: SystemWhere, orderBy: SystemOrderBy): [System!]!
-  findFirstSystem(offset: Int, where: SystemWhere, orderBy: SystemOrderBy): System
+  findManySystem(offset: Int, limit: Int, where: SystemWhere, orderBy: [SystemOrderBy!]): [System!]!
+  findFirstSystem(offset: Int, where: SystemWhere, orderBy: [SystemOrderBy!]): System
   countSystem(limit: Int, where: SystemWhere): Int!
-  findManyUser(offset: Int, limit: Int, where: UserWhere, orderBy: UserOrderBy): [User!]!
-  findFirstUser(offset: Int, where: UserWhere, orderBy: UserOrderBy): User
+  findManyUser(offset: Int, limit: Int, where: UserWhere, orderBy: [UserOrderBy!]): [User!]!
+  findFirstUser(offset: Int, where: UserWhere, orderBy: [UserOrderBy!]): User
   countUser(limit: Int, where: UserWhere): Int!
 }
 
 type Mutation {
-  backup: String!
-  bucket(cors: [CorsInput!]): BucketObject
   normalizationPostFiles(postId: String!, removeAll: Boolean): Boolean
   restore(file: Upload!): Boolean
-  restoreFiles(files: [Upload!]!): [FireStore!]
   signIn(token: String): User
   uploadPostIcon(postId: String!, file: Upload): FireStore
   uploadPostImage(postId: String!, file: Upload!): FireStore!
   uploadSystemIcon(file: Upload!): FireStore
+  backup: String!
+  bucket(cors: [CorsInput!]): BucketObject
+  restoreFiles(files: [Upload!]!): [FireStore!]
   createOneCategory(input: CategoryCreate!): Category!
   createManyCategory(input: [CategoryCreate!]!): [Category!]!
-  updateCategory(input: CategoryInput!, where: CategoryWhere): [Category!]!
-  deleteCategory(where: CategoryWhere): [Category_!]!
+  updateCategory(input: CategoryUpdate!, where: CategoryWhere): [Category!]!
+  deleteCategory(where: CategoryWhere): [Category!]!
   createOneCategoryToPost(input: CategoryToPostCreate!): CategoryToPost!
   createManyCategoryToPost(input: [CategoryToPostCreate!]!): [CategoryToPost!]!
-  updateCategoryToPost(input: CategoryToPostInput!, where: CategoryToPostWhere): [CategoryToPost!]!
-  deleteCategoryToPost(where: CategoryToPostWhere): [CategoryToPost_!]!
+  updateCategoryToPost(input: CategoryToPostUpdate!, where: CategoryToPostWhere): [CategoryToPost!]!
+  deleteCategoryToPost(where: CategoryToPostWhere): [CategoryToPost!]!
   createOneFireStore(input: FireStoreCreate!): FireStore!
   createManyFireStore(input: [FireStoreCreate!]!): [FireStore!]!
-  updateFireStore(input: FireStoreInput!, where: FireStoreWhere): [FireStore!]!
-  deleteFireStore(where: FireStoreWhere): [FireStore_!]!
+  updateFireStore(input: FireStoreUpdate!, where: FireStoreWhere): [FireStore!]!
+  deleteFireStore(where: FireStoreWhere): [FireStore!]!
   createOneFireStoreToPost(input: FireStoreToPostCreate!): FireStoreToPost!
   createManyFireStoreToPost(input: [FireStoreToPostCreate!]!): [FireStoreToPost!]!
-  updateFireStoreToPost(input: FireStoreToPostInput!, where: FireStoreToPostWhere): [FireStoreToPost!]!
-  deleteFireStoreToPost(where: FireStoreToPostWhere): [FireStoreToPost_!]!
+  updateFireStoreToPost(input: FireStoreToPostUpdate!, where: FireStoreToPostWhere): [FireStoreToPost!]!
+  deleteFireStoreToPost(where: FireStoreToPostWhere): [FireStoreToPost!]!
   createOnePost(input: PostCreate!): Post!
   createManyPost(input: [PostCreate!]!): [Post!]!
-  updatePost(input: PostInput!, where: PostWhere): [Post!]!
-  deletePost(where: PostWhere): [Post_!]!
+  updatePost(input: PostUpdate!, where: PostWhere): [Post!]!
+  deletePost(where: PostWhere): [Post!]!
   createOneSystem(input: SystemCreate!): System!
   createManySystem(input: [SystemCreate!]!): [System!]!
-  updateSystem(input: SystemInput!, where: SystemWhere): [System!]!
-  deleteSystem(where: SystemWhere): [System_!]!
+  updateSystem(input: SystemUpdate!, where: SystemWhere): [System!]!
+  deleteSystem(where: SystemWhere): [System!]!
   createOneUser(input: UserCreate!): User!
   createManyUser(input: [UserCreate!]!): [User!]!
-  updateUser(input: UserInput!, where: UserWhere): [User!]!
-  deleteUser(where: UserWhere): [User_!]!
+  updateUser(input: UserUpdate!, where: UserWhere): [User!]!
+  deleteUser(where: UserWhere): [User!]!
 }

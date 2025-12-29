@@ -79,20 +79,15 @@ mutation UpdatePost(
   $content: String
   $published: Boolean
   $publishedAt: DateTime
-  $categories: [CategoryToPostCreate!]!
+  $categories: Post_categories
 ) {
-  deleteCategoryToPost(where: { postId: { eq: $postId } }) {
-    __typename
-  }
-  createManyCategoryToPost(input: $categories) {
-    __typename
-  }
   updatePost(
     input: {
       title: $title
       content: $content
       published: $published
       publishedAt: $publishedAt
+      categories:  $categories
     }
     where: { id: { eq: $postId } }
   ) {

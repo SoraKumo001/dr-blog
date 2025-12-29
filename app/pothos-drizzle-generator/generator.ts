@@ -31,7 +31,7 @@ import type {
 import type { RelationalQueryBuilder } from "drizzle-orm/pg-core/query-builders/query";
 import type { GraphQLResolveInfo } from "graphql";
 
-type ModelData = {
+export type ModelData = {
   table: SchemaEntry;
   operations: (typeof OperationBasic)[number][];
   columns: PgColumn[];
@@ -228,34 +228,85 @@ export class DrizzleGenerator<Types extends SchemaTypes> {
     this.inputType[modelName][type] = input;
     return input;
   }
+  getInputRelation(modelName: string) {
+    const { relations } = this.getTables()[modelName]!;
 
+    const relayFields = Object.entries(relations)
+      .filter(([, relation]) => relation.through)
+      .map(([relationName, relation]) => {
+        const rowInputType = this.getInputType(
+          modelName,
+          `_${relationName}Set`,
+          {
+            fields: (t) =>
+              Object.fromEntries(
+                relation.targetColumns.map((col) => [
+                  col.name,
+                  t.field({
+                    type: this.getDataType(col),
+                    required: col.notNull,
+                  }),
+                ])
+              ),
+          }
+        );
+        const relationInputType = this.getInputType(
+          modelName,
+          `_${relationName}`,
+          {
+            fields: (t) => ({
+              set: t.field({ type: [rowInputType] }),
+            }),
+          }
+        );
+
+        return [relationName, relationInputType] as const;
+      });
+    return relayFields;
+  }
   getInputCreate(modelName: string) {
     const { inputColumns } = this.getTables()[modelName]!;
+
     return this.getInputType(modelName, "Create", {
-      fields: (t) =>
-        Object.fromEntries(
-          inputColumns.map((c: PgColumn) => [
-            c.name,
-            t.field({
-              type: this.getDataType(c),
-              required: c.notNull && !c.default,
-            }),
-          ])
-        ),
+      fields: (t) => {
+        const dbFields = inputColumns.map((col: PgColumn) => [
+          col.name,
+          t.field({
+            type: this.getDataType(col),
+            required: col.notNull && !col.default,
+          }),
+        ]);
+        const relayFields = this.getInputRelation(modelName);
+
+        return Object.fromEntries([
+          ...dbFields,
+          ...relayFields.map(([name, field]) => [
+            name,
+            t.field({ type: field }),
+          ]),
+        ]);
+      },
     });
   }
+
   getInputUpdate(modelName: string) {
     const { inputColumns } = this.getTables()[modelName]!;
-    return this.getInputType(modelName, "Input", {
+    return this.getInputType(modelName, "Update", {
       fields: (t) => {
-        return Object.fromEntries(
-          inputColumns.map((c: PgColumn) => [
-            c.name,
-            t.field({
-              type: this.getDataType(c),
-            }),
-          ])
-        );
+        const dbFields = inputColumns.map((c: PgColumn) => [
+          c.name,
+          t.field({
+            type: this.getDataType(c),
+          }),
+        ]);
+        const relayFields = this.getInputRelation(modelName);
+        return Object.fromEntries([
+          ...dbFields,
+          ...relayFields.map(([name, field]) => [
+            name,
+            t.field({ type: field }),
+          ]),
+        ]);
       },
     });
   }
@@ -414,13 +465,17 @@ export const replaceColumnValues = (
   return queryData;
 };
 
-export const getReturning = (info: GraphQLResolveInfo, columns: PgColumn[]) => {
+export const getReturning = (
+  info: GraphQLResolveInfo,
+  columns: PgColumn[],
+  primary?: boolean
+) => {
   const queryFields = getQueryFields(info);
   const isRelay = Object.keys(queryFields).some(
     (v) => !columns.find((c) => c.name === v)
   );
   const returnFields = columns
-    .filter((v) => queryFields[v.name])
+    .filter((v) => queryFields[v.name] || (primary && v.primary))
     .map((v) => [v.name, v]);
   if (!returnFields.length)
     return { isRelay, queryFields, returning: undefined };

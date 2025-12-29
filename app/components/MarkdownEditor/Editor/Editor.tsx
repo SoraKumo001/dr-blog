@@ -152,10 +152,9 @@ export const Editor: FC<Props> = ({ id }) => {
       title,
       content,
       published,
-      categories: categories.map((categoryId) => ({
-        postId: id,
-        categoryId,
-      })),
+      categories: {
+        set: categories.map((id) => ({ id })),
+      },
       publishedAt: new Date(publishedAt).toISOString(),
     })
       .then((result) => {
