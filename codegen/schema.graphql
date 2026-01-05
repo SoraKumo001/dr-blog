@@ -23,11 +23,6 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar Json
 
-"""
-A field whose value is a hexadecimal: https://en.wikipedia.org/wiki/Hexadecimal.
-"""
-scalar Decimal
-
 enum OrderBy {
   Asc
   Desc
@@ -48,6 +43,7 @@ input CategoryWhere {
   name: StringInputOperator
   createdAt: DateTimeInputOperator
   updatedAt: DateTimeInputOperator
+  posts: PostWhere
 }
 
 input CategoryOrderBy {
@@ -79,6 +75,8 @@ input CategoryToPostWhere {
   NOT: CategoryToPostWhere
   postId: StringInputOperator
   categoryId: StringInputOperator
+  post: PostWhere
+  category: CategoryWhere
 }
 
 input CategoryToPostOrderBy {
@@ -105,6 +103,10 @@ input FireStoreWhere {
   mimeType: StringInputOperator
   createdAt: DateTimeInputOperator
   updatedAt: DateTimeInputOperator
+  systemIcons: SystemWhere
+  systemCards: SystemWhere
+  postCards: PostWhere
+  posts: PostWhere
 }
 
 input FireStoreOrderBy {
@@ -139,6 +141,8 @@ input FireStoreToPostWhere {
   NOT: FireStoreToPostWhere
   postId: StringInputOperator
   fireStoreId: StringInputOperator
+  post: PostWhere
+  fireStore: FireStoreWhere
 }
 
 input FireStoreToPostOrderBy {
@@ -169,6 +173,10 @@ input PostWhere {
   createdAt: DateTimeInputOperator
   updatedAt: DateTimeInputOperator
   publishedAt: DateTimeInputOperator
+  author: UserWhere
+  card: FireStoreWhere
+  categories: CategoryWhere
+  postFiles: FireStoreWhere
 }
 
 input PostOrderBy {
@@ -188,7 +196,6 @@ input PostCreate {
   published: Boolean!
   title: String
   content: String!
-  authorId: String!
   cardId: String
   createdAt: DateTime
   updatedAt: DateTime
@@ -202,7 +209,6 @@ input PostUpdate {
   published: Boolean
   title: String
   content: String
-  authorId: String
   cardId: String
   createdAt: DateTime
   updatedAt: DateTime
@@ -222,6 +228,8 @@ input SystemWhere {
   cardId: StringInputOperator
   createdAt: DateTimeInputOperator
   updatedAt: DateTimeInputOperator
+  icon: FireStoreWhere
+  card: FireStoreWhere
 }
 
 input SystemOrderBy {
@@ -263,6 +271,7 @@ input UserWhere {
   name: StringInputOperator
   createdAt: DateTimeInputOperator
   updatedAt: DateTimeInputOperator
+  post: PostWhere
 }
 
 input UserOrderBy {

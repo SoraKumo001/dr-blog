@@ -34,8 +34,7 @@ export const builder = new SchemaBuilder<BuilderType>({
   pothosDrizzleGenerator: {
     all: {
       executable: ({ operation, ctx }) => {
-        // Prohibit write operations if the user is not authenticated
-        if (isOperation(OperationMutation, operation) && !ctx.user) {
+        if (isOperation("mutation", operation) && !ctx.user) {
           return false;
         }
         return true;
@@ -44,7 +43,7 @@ export const builder = new SchemaBuilder<BuilderType>({
     models: {
       post: {
         where: ({ operation, ctx }) => {
-          if (isOperation(OperationQuery, operation)) {
+          if (isOperation("query", operation)) {
             return {
               OR: [
                 { authorId: { eq: ctx.user?.id } },
@@ -54,11 +53,13 @@ export const builder = new SchemaBuilder<BuilderType>({
           }
           return undefined;
         },
-        // inputFields: ({}) => {
-        //   return { exclude: ["authorId"] };
-        // },
+        inputFields: ({}) => {
+          return { exclude: ["authorId"] };
+        },
         inputData: ({ ctx }) => {
-          return { authorId: ctx.user?.id };
+          return {
+            authorId: ctx.user?.id,
+          };
         },
       },
     },

@@ -23,8 +23,6 @@ export type Scalars = {
   Date: { input: Date | string; output: Date | string; }
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: { input: Date | string; output: Date | string; }
-  /** A field whose value is a hexadecimal: https://en.wikipedia.org/wiki/Hexadecimal. */
-  Decimal: { input: any; output: any; }
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   Json: { input: any; output: any; }
   Upload: { input: any; output: any; }
@@ -161,7 +159,9 @@ export type CategoryToPostWhere = {
   AND?: InputMaybe<Array<CategoryToPostWhere>>;
   NOT?: InputMaybe<CategoryToPostWhere>;
   OR?: InputMaybe<Array<CategoryToPostWhere>>;
+  category?: InputMaybe<CategoryWhere>;
   categoryId?: InputMaybe<StringInputOperator>;
+  post?: InputMaybe<PostWhere>;
   postId?: InputMaybe<StringInputOperator>;
 };
 
@@ -180,6 +180,7 @@ export type CategoryWhere = {
   createdAt?: InputMaybe<DateTimeInputOperator>;
   id?: InputMaybe<StringInputOperator>;
   name?: InputMaybe<StringInputOperator>;
+  posts?: InputMaybe<PostWhere>;
   updatedAt?: InputMaybe<DateTimeInputOperator>;
 };
 
@@ -372,7 +373,9 @@ export type FireStoreToPostWhere = {
   AND?: InputMaybe<Array<FireStoreToPostWhere>>;
   NOT?: InputMaybe<FireStoreToPostWhere>;
   OR?: InputMaybe<Array<FireStoreToPostWhere>>;
+  fireStore?: InputMaybe<FireStoreWhere>;
   fireStoreId?: InputMaybe<StringInputOperator>;
+  post?: InputMaybe<PostWhere>;
   postId?: InputMaybe<StringInputOperator>;
 };
 
@@ -393,6 +396,10 @@ export type FireStoreWhere = {
   id?: InputMaybe<StringInputOperator>;
   mimeType?: InputMaybe<StringInputOperator>;
   name?: InputMaybe<StringInputOperator>;
+  postCards?: InputMaybe<PostWhere>;
+  posts?: InputMaybe<PostWhere>;
+  systemCards?: InputMaybe<SystemWhere>;
+  systemIcons?: InputMaybe<SystemWhere>;
   updatedAt?: InputMaybe<DateTimeInputOperator>;
 };
 
@@ -714,7 +721,6 @@ export type PostPostFilesCountArgs = {
 };
 
 export type PostCreate = {
-  authorId: Scalars['String']['input'];
   cardId?: InputMaybe<Scalars['String']['input']>;
   categories?: InputMaybe<Post_Categories>;
   content: Scalars['String']['input'];
@@ -740,7 +746,6 @@ export type PostOrderBy = {
 };
 
 export type PostUpdate = {
-  authorId?: InputMaybe<Scalars['String']['input']>;
   cardId?: InputMaybe<Scalars['String']['input']>;
   categories?: InputMaybe<Post_Categories>;
   content?: InputMaybe<Scalars['String']['input']>;
@@ -757,11 +762,15 @@ export type PostWhere = {
   AND?: InputMaybe<Array<PostWhere>>;
   NOT?: InputMaybe<PostWhere>;
   OR?: InputMaybe<Array<PostWhere>>;
+  author?: InputMaybe<UserWhere>;
   authorId?: InputMaybe<StringInputOperator>;
+  card?: InputMaybe<FireStoreWhere>;
   cardId?: InputMaybe<StringInputOperator>;
+  categories?: InputMaybe<CategoryWhere>;
   content?: InputMaybe<StringInputOperator>;
   createdAt?: InputMaybe<DateTimeInputOperator>;
   id?: InputMaybe<StringInputOperator>;
+  postFiles?: InputMaybe<FireStoreWhere>;
   published?: InputMaybe<BooleanInputOperator>;
   publishedAt?: InputMaybe<DateTimeInputOperator>;
   title?: InputMaybe<StringInputOperator>;
@@ -1052,9 +1061,11 @@ export type SystemWhere = {
   AND?: InputMaybe<Array<SystemWhere>>;
   NOT?: InputMaybe<SystemWhere>;
   OR?: InputMaybe<Array<SystemWhere>>;
+  card?: InputMaybe<FireStoreWhere>;
   cardId?: InputMaybe<StringInputOperator>;
   createdAt?: InputMaybe<DateTimeInputOperator>;
   description?: InputMaybe<StringInputOperator>;
+  icon?: InputMaybe<FireStoreWhere>;
   iconId?: InputMaybe<StringInputOperator>;
   id?: InputMaybe<StringInputOperator>;
   title?: InputMaybe<StringInputOperator>;
@@ -1117,6 +1128,7 @@ export type UserWhere = {
   email?: InputMaybe<StringInputOperator>;
   id?: InputMaybe<StringInputOperator>;
   name?: InputMaybe<StringInputOperator>;
+  post?: InputMaybe<PostWhere>;
   updatedAt?: InputMaybe<DateTimeInputOperator>;
 };
 
@@ -1347,7 +1359,7 @@ export function useFindPostsQuery(options?: Omit<Urql.UseQueryArgs<FindPostsQuer
 };
 export const CreateOnePostDocument = gql`
     mutation CreateOnePost {
-  createOnePost(input: {authorId: "", content: "", published: false}) {
+  createOnePost(input: {content: "", published: false}) {
     id
     published
     title

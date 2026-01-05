@@ -48,7 +48,7 @@ query FindPosts {
 }
 
 mutation CreateOnePost {
-  createOnePost(input: { authorId: "", content: "", published: false }) {
+  createOnePost(input: {  content: "", published: false }) {
     id
     published
     title

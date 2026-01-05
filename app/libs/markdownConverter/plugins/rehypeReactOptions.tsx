@@ -1,5 +1,12 @@
 import { Highlight, themes } from "prism-react-renderer";
-import { useMemo, type ComponentProps } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+  type ComponentProps,
+  type ReactNode,
+} from "react";
 import prod from "react/jsx-runtime";
 import { Link } from "react-router";
 import { useMarkdownContext } from "../markdownContext";
@@ -47,6 +54,31 @@ const FirebaseImage = ({
   return <img {...props} src={src} alt={alt} />;
 };
 
+const Mermaid = ({ children }: { children: ReactNode }) => {
+  const id = useId();
+  const [svg, setSvg] = useState<string>();
+  useEffect(() => {
+    import(
+      // @ts-ignore
+      "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
+    ).then(({ default: mermaid }) => {
+      mermaid.initialize({
+        startOnLoad: false,
+      });
+      mermaid.render(id, children).then(({ svg }: { svg: string }) => {
+        console.log(svg);
+        setSvg(svg);
+      });
+    });
+  }, [children, id]);
+  return (
+    <pre
+      className="rounded border bg-white p-2 [&_*]:overflow-visible"
+      dangerouslySetInnerHTML={{ __html: svg ?? String(children) }}
+    />
+  );
+};
+
 const Code = ({
   ref: _,
   children,
@@ -62,6 +94,9 @@ const Code = ({
   const component = useMemo(() => {
     if (dataInlineCode) {
       return <code data-inline-code>{children}</code>;
+    }
+    if (dataLanguage === "mermaid") {
+      return <Mermaid>{children}</Mermaid>;
     }
     return (
       <Highlight
