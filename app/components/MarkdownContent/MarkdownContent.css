@@ -16,13 +16,13 @@
     @apply ml-8;
   }
   [data-depth="4"] {
-    @apply ml-4;
+    @apply ml-12;
   }
   [data-depth="5"] {
-    @apply ml-8;
+    @apply ml-16;
   }
   [data-depth="6"] {
-    @apply ml-8;
+    @apply ml-20;
   }
   h1 {
     @apply text-4xl;

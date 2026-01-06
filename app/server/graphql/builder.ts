@@ -3,8 +3,6 @@ import DrizzlePlugin from "@pothos/plugin-drizzle";
 import { getTableConfig } from "drizzle-orm/pg-core";
 import PothosDrizzleGeneratorPlugin, {
   isOperation,
-  OperationMutation,
-  OperationQuery,
 } from "pothos-drizzle-generator";
 import { db, type Context } from "../db";
 import { relations } from "~/db/relations";

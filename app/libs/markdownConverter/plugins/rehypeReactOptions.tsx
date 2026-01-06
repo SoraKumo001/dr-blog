@@ -3,6 +3,7 @@ import {
   useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   type ComponentProps,
   type ReactNode,
@@ -57,24 +58,33 @@ const FirebaseImage = ({
 const Mermaid = ({ children }: { children: ReactNode }) => {
   const id = useId();
   const [svg, setSvg] = useState<string>();
+  const property = useRef<{
+    mermaid?: Promise<{
+      default: {
+        render: (id: string, code: unknown) => Promise<{ svg: string }>;
+      };
+    }>;
+  }>({}).current;
+  const code = String(children);
   useEffect(() => {
-    import(
-      // @ts-ignore
-      "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
-    ).then(({ default: mermaid }) => {
-      mermaid.initialize({
-        startOnLoad: false,
+    (async () => {
+      if (!property.mermaid) {
+        property.mermaid = import(
+          // @ts-ignore
+          "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
+        );
+      }
+      property.mermaid.then(({ default: mermaid }) => {
+        mermaid.render(id, code).then(({ svg }: { svg: string }) => {
+          setSvg(svg);
+        });
       });
-      mermaid.render(id, children).then(({ svg }: { svg: string }) => {
-        console.log(svg);
-        setSvg(svg);
-      });
-    });
-  }, [children, id]);
+    })();
+  }, [code, id, property]);
   return (
     <pre
       className="rounded border bg-white p-2 [&_*]:overflow-visible"
-      dangerouslySetInnerHTML={{ __html: svg ?? String(children) }}
+      dangerouslySetInnerHTML={{ __html: svg ?? code }}
     />
   );
 };
@@ -87,10 +97,12 @@ const Code = ({
   "data-language": string;
   "data-line": number;
   "data-inline-code": boolean;
+  "data-depth": string;
 }) => {
   const dataLine = Number(props["data-line"] ?? 0);
   const dataLanguage = props["data-language"];
   const dataInlineCode = props["data-inline-code"];
+  const dataDepth = props["data-depth"];
   const component = useMemo(() => {
     if (dataInlineCode) {
       return <code data-inline-code>{children}</code>;
@@ -110,6 +122,7 @@ const Code = ({
             <div
               style={style}
               className="overflow-x-auto rounded py-1 font-mono"
+              data-depth={dataDepth}
             >
               {tokens.slice(0, -1).map((line, i) => (
                 <div
@@ -145,7 +158,7 @@ const Code = ({
         }}
       </Highlight>
     );
-  }, [dataInlineCode, children, dataLanguage, dataLine]);
+  }, [dataInlineCode, dataLanguage, children, dataDepth, dataLine]);
   return component;
 };
 
