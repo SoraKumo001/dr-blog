@@ -3,7 +3,6 @@ import {
   useEffect,
   useId,
   useMemo,
-  useRef,
   useState,
   type ComponentProps,
   type ReactNode,
@@ -55,37 +54,111 @@ const FirebaseImage = ({
   return <img {...props} src={src} alt={alt} />;
 };
 
-const Mermaid = ({ children }: { children: ReactNode }) => {
-  const id = useId();
-  const [svg, setSvg] = useState<string>();
-  const property = useRef<{
-    mermaid?: Promise<{
-      default: {
-        render: (id: string, code: unknown) => Promise<{ svg: string }>;
-      };
-    }>;
-  }>({}).current;
-  const code = String(children);
-  useEffect(() => {
-    (async () => {
-      if (!property.mermaid) {
-        property.mermaid = import(
-          // @ts-ignore
-          "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
-        );
-      }
-      property.mermaid.then(({ default: mermaid }) => {
-        mermaid.render(id, code).then(({ svg }: { svg: string }) => {
-          setSvg(svg);
-        });
+let mermaidRenderer: Promise<{
+  render: (id: string, code: unknown) => Promise<{ svg: string }>;
+}> | null = null;
+let mermaidIframe: HTMLIFrameElement | null = null;
+let refCount = 0;
+
+const getMermaidRenderer = () => {
+  refCount++;
+  if (!mermaidRenderer) {
+    mermaidRenderer = new Promise((resolve) => {
+      const iframe = document.createElement("iframe");
+      mermaidIframe = iframe;
+      Object.assign(iframe.style, {
+        position: "absolute",
+        width: "0",
+        height: "0",
+        border: "none",
+        visibility: "hidden",
       });
-    })();
-  }, [code, id, property]);
-  return (
+      document.body.appendChild(iframe);
+      const onMessage = (e: MessageEvent) => {
+        if (e.source !== iframe.contentWindow) return;
+        if (e.data === "ready") {
+          window.removeEventListener("message", onMessage);
+          resolve({
+            render: async (id: string, code: unknown) => {
+              return new Promise((resolveRender, rejectRender) => {
+                const channel = new MessageChannel();
+                channel.port1.onmessage = (event) => {
+                  if (event.data.error) {
+                    rejectRender(event.data.error);
+                  } else {
+                    resolveRender(event.data);
+                  }
+                  channel.port1.close();
+                };
+                iframe.contentWindow?.postMessage({ id, code }, "*", [
+                  channel.port2,
+                ]);
+              });
+            },
+          });
+        }
+      };
+      window.addEventListener("message", onMessage);
+      iframe.srcdoc = `<!DOCTYPE html>
+<html>
+<body>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: false });
+window.parent.postMessage("ready", "*");
+window.addEventListener("message", async (e) => {
+  const { id, code } = e.data;
+  try {
+    const { svg } = await mermaid.render(id, code);
+    e.ports[0].postMessage({ svg });
+  } catch (err) {
+    e.ports[0].postMessage({ error: err.message });
+  }
+});
+</script>
+</body>
+</html>`;
+    });
+  }
+  return mermaidRenderer;
+};
+
+const releaseMermaidRenderer = () => {
+  refCount--;
+  if (refCount === 0) {
+    if (mermaidIframe) {
+      document.body.removeChild(mermaidIframe);
+      mermaidIframe = null;
+    }
+    mermaidRenderer = null;
+  }
+};
+
+const Mermaid = ({
+  children,
+  ...props
+}: { children: ReactNode } & ComponentProps<"pre">) => {
+  const id = useId();
+  const [svg, setSvg] = useState<ReactNode>();
+  useEffect(() => {
+    getMermaidRenderer();
+    return () => releaseMermaidRenderer();
+  }, []);
+  useEffect(() => {
+    const mermaidCode = String(children);
+    mermaidRenderer
+      ?.then((m) => m.render(id, mermaidCode))
+      .then(({ svg }) => setSvg(svg))
+      .catch(() => setSvg(undefined));
+  }, [children, id]);
+  return svg ? (
     <pre
+      {...props}
       className="rounded border bg-white p-2 [&_*]:overflow-visible"
-      dangerouslySetInnerHTML={{ __html: svg ?? code }}
+      dangerouslySetInnerHTML={{ __html: svg }}
     />
+  ) : (
+    children
   );
 };
 
@@ -108,7 +181,11 @@ const Code = ({
       return <code data-inline-code>{children}</code>;
     }
     if (dataLanguage === "mermaid") {
-      return <Mermaid>{children}</Mermaid>;
+      return (
+        <Mermaid data-depth={dataDepth} data-line={dataLine}>
+          {children}
+        </Mermaid>
+      );
     }
     return (
       <Highlight
