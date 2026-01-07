@@ -11,7 +11,7 @@ interface Props {
   types?: ("png" | "jpeg" | "x-icon" | "webp")[];
   placeholder?: string;
   url?: string | null;
-  onChange?: (value: Blob | null) => void;
+  onChange?: (value: Blob | null) => Promise<void>;
 }
 
 /**
@@ -26,6 +26,7 @@ export const ImageDragField: FC<Props> = ({
   onChange,
   url,
 }) => {
+  const [isChange, setChange] = useState(false);
   const [isDrag, setDrag] = useState(false);
   const [image, setImage] = useState(url);
   const [active, setActive] = useState(false);
@@ -54,7 +55,8 @@ export const ImageDragField: FC<Props> = ({
           const type = file.type.split("/")[1];
           if (!type || !types.includes(type as (typeof types)[number])) return;
           convertUrl(file, type).then(setImage);
-          onChange?.(file);
+          if (onChange) setChange(true);
+          onChange?.(file).then(() => setChange(false));
         }
       }}
       onClick={(e) => {
@@ -62,6 +64,9 @@ export const ImageDragField: FC<Props> = ({
         e.preventDefault();
       }}
     >
+      {isChange && (
+        <div className="absolute inset-0 m-auto h-16 w-16 animate-spin rounded-full border-6 border-white border-t-transparent drop-shadow-[0_0_1px_rgba(0,0,0,1)]" />
+      )}
       <input
         ref={refInput}
         className="absolute size-0"
@@ -80,7 +85,8 @@ export const ImageDragField: FC<Props> = ({
             e.preventDefault();
             e.stopPropagation();
             convertUrl(file, type).then(setImage);
-            onChange?.(file);
+            if (onChange) setChange(true);
+            onChange?.(file).then(() => setChange(false));
           });
         }}
       />

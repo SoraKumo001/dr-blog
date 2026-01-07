@@ -80,6 +80,7 @@ mutation UpdatePost(
   $published: Boolean
   $publishedAt: DateTime
   $categories: Post_categories
+  $cardId: String
 ) {
   updatePost(
     input: {
@@ -88,6 +89,7 @@ mutation UpdatePost(
       published: $published
       publishedAt: $publishedAt
       categories:  $categories
+      cardId: $cardId
     }
     where: { id: { eq: $postId } }
   ) {

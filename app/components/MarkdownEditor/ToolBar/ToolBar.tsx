@@ -183,9 +183,9 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
       >
         <ImageDragField
           placeholder="Eye catch"
-          onChange={(blob) => {
+          onChange={async (blob) => {
             if (blob)
-              convertImage(blob, 256, 256).then((b) =>
+              await convertImage(blob, 256, 256).then((b) =>
                 onCard(b && b.size < blob.size ? b : blob)
               );
             else onCard(null);

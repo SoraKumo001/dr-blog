@@ -1170,6 +1170,7 @@ export type UpdatePostMutationVariables = Exact<{
   published?: InputMaybe<Scalars['Boolean']['input']>;
   publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
   categories?: InputMaybe<Post_Categories>;
+  cardId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -1394,9 +1395,9 @@ export function useDeletePostMutation() {
   return Urql.useMutation<DeletePostMutation, DeletePostMutationVariables>(DeletePostDocument);
 };
 export const UpdatePostDocument = gql`
-    mutation UpdatePost($postId: String!, $title: String, $content: String, $published: Boolean, $publishedAt: DateTime, $categories: Post_categories) {
+    mutation UpdatePost($postId: String!, $title: String, $content: String, $published: Boolean, $publishedAt: DateTime, $categories: Post_categories, $cardId: String) {
   updatePost(
-    input: {title: $title, content: $content, published: $published, publishedAt: $publishedAt, categories: $categories}
+    input: {title: $title, content: $content, published: $published, publishedAt: $publishedAt, categories: $categories, cardId: $cardId}
     where: {id: {eq: $postId}}
   ) {
     id
