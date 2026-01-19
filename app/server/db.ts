@@ -45,11 +45,20 @@ export const db: NodePgDatabase<typeof relations, typeof relations> = new Proxy<
         relations,
         logger: {
           logQuery: (query, params) => {
+            const formattedParams = params.map((value, index) => {
+              const stringValue =
+                typeof value === "string" ? `'${value}'` : String(value);
+              return `${stringValue} /*$${index + 1}*/`;
+            });
             console.info(
-              "===========================\n",
-              format(query, { language: "postgresql" }),
-              "\n--\n",
-              params
+              `${format(query, {
+                language: "postgresql",
+                keywordCase: "upper",
+                expressionWidth: 100,
+                params: Object.fromEntries(
+                  formattedParams.map((p, i) => [i + 1, p])
+                ),
+              })};\n--`
             );
           },
         },

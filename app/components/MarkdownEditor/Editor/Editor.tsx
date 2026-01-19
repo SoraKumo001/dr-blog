@@ -152,7 +152,7 @@ export const Editor: FC<Props> = ({ id }) => {
       title,
       content,
       published,
-      cardId: card ? undefined : null,
+      cardId: card === null ? null : undefined,
       categories: {
         set: categories.map((id) => ({ id })),
       },
