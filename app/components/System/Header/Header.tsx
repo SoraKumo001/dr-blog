@@ -57,6 +57,7 @@ export const Header: FC<Props> = () => {
               hover:text-blue-600
             `}
           to="/"
+          viewTransition
         >
           <HomeIcon fontSize="large" size={24} />
           {data?.findFirstSystem?.title}
@@ -69,7 +70,7 @@ export const Header: FC<Props> = () => {
                 color="primary"
                 size="sm"
                 onClick={() => {
-                  navigate("/edit");
+                  navigate("/edit", { viewTransition: true });
                 }}
                 aria-label="create post"
               >
@@ -80,7 +81,7 @@ export const Header: FC<Props> = () => {
                 color="primary"
                 size="sm"
                 onClick={() => {
-                  navigate("/settings");
+                  navigate("/settings", { viewTransition: true });
                 }}
                 aria-label="setting"
               >
@@ -106,7 +107,7 @@ export const Header: FC<Props> = () => {
               color="primary"
               size="sm"
               onClick={() => {
-                navigate("/login");
+                navigate("/login", { viewTransition: true });
               }}
               aria-label="login"
             >

@@ -8,7 +8,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLocation,
 } from "react-router";
 import { GoogleAnalytics } from "./components/Commons/GoogleAnalytics";
 import { HeadProvider, HeadRoot } from "./components/Commons/Head";
@@ -26,8 +25,7 @@ import type { Route } from "./+types/root";
 export function Layout({ children }: { children: React.ReactNode }) {
   const value = useRootContext();
   const { host, session, cookie, env, next } = value;
-  const [cacheState,clearCache] = useState<{}>()
-  const { pathname } = useLocation();
+  const [cacheState, clearCache] = useState<{}>();
   return (
     <html lang="ja">
       <EnvProvider value={env}>
@@ -49,18 +47,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   <NextSSRWait>
                     <HeadRoot />
                   </NextSSRWait>
-                  <CloudflareFonts href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" />
+                  <CloudflareFonts href="https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400;700&display=swap" />
                 </head>
                 <body>
                   <div className={"flex h-screen flex-col"}>
                     <Header />
                     <main
-                      className={`
-                      relative flex-1 overflow-hidden opacity-100
-                      transition-opacity duration-200 ease-in-out
-                      starting:opacity-50
-                    `}
-                      key={pathname}
+                      className={`relative flex-1 overflow-hidden`}
+                      style={{
+                        viewTransitionName: "page-content",
+                      }}
                     >
                       {children}
                     </main>
