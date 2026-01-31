@@ -6,17 +6,18 @@
   "main": "./workers/app.ts",
   "assets": {
     "directory": "./build/client",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
   },
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   "placement": { "mode": "smart" },
+  // "placement": { "region": "aws:ap-northeast-1" },
   "hyperdrive": [
     {
       "binding": "database",
       "id": "063e869b7f084a7a82b49f1ef8397a6c",
-      "localConnectionString": "postgresql://postgres:password@localhost:25432/postgres?schema=blog_drizzle"
-    }
-  ]
+      "localConnectionString": "postgresql://postgres:password@localhost:25432/postgres?schema=blog_drizzle",
+    },
+  ],
 }

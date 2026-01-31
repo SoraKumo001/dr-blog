@@ -15,7 +15,7 @@ export default async function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  loadContext: AppLoadContext
+  loadContext: AppLoadContext,
 ) {
   let status = responseStatusCode;
   const rootValue = await getInitialProps(request, loadContext);
@@ -29,20 +29,27 @@ export default async function handleRequest(
         console.error(error);
         status = 500;
       },
-    }
+    },
   );
   // await body.allReady;
 
   responseHeaders.set("Content-Type", "text/html");
-  return new Response(body, {
+  if (!rootValue.session) {
+    responseHeaders.set("Cache-Control", "public, max-age=60, s-maxage=60");
+    responseHeaders.set("CDN-Cache-Control", "public, max-age=60, s-maxage=60");
+  }
+
+  const response = new Response(body, {
     headers: responseHeaders,
     status,
   });
+
+  return response;
 }
 
 export function handleError(
   error: unknown,
-  { request }: LoaderFunctionArgs | ActionFunctionArgs
+  { request }: LoaderFunctionArgs | ActionFunctionArgs,
 ) {
   if (
     (isRouteErrorResponse(error) && error.status === 404) ||
@@ -55,7 +62,7 @@ export function handleError(
 
 const getInitialProps = async (
   request: Request,
-  loadContext: AppLoadContext
+  loadContext: AppLoadContext,
 ) => {
   const { env, next } = (
     loadContext as {
@@ -63,14 +70,14 @@ const getInitialProps = async (
         env: Record<string, string>;
         next: (
           input: Request | string,
-          init?: RequestInit
+          init?: RequestInit,
         ) => Promise<Response>;
       };
     }
   ).cloudflare;
   const cookie = request.headers.get("cookie");
   const cookies = Object.fromEntries(
-    cookie?.split(";").map((v) => v.trim().split("=")) ?? []
+    cookie?.split(";").map((v) => v.trim().split("=")) ?? [],
   );
   const token = cookies["auth-token"];
   const session = await getUserFromToken({ token, secret: env.SECRET_KEY });
@@ -80,7 +87,7 @@ const getInitialProps = async (
     host,
     session: session && { name: session.name, email: session.email },
     env: Object.fromEntries(
-      Object.entries(env).filter(([v]) => v.startsWith("NEXT_PUBLIC_"))
+      Object.entries(env).filter(([v]) => v.startsWith("NEXT_PUBLIC_")),
     ),
     next,
   };

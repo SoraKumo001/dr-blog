@@ -1,13 +1,23 @@
 import { Hono } from "hono";
 import { contextStorage } from "hono/context-storage";
 import { createRequestHandler } from "react-router";
+// @ts-ignore
+import * as build from "../build/server/index.js";
+
+const cache = await caches.open("app");
 
 const app = new Hono();
 app.use(contextStorage());
 
 app.use(async (c) => {
-  // @ts-ignore
-  const build = await import("../build/server/index.js");
+  const isUser = c.req.header("cookie")?.includes("auth-token");
+  if (!isUser) {
+    const cachedResponse = await cache.match(c.req.raw);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+  }
+
   // @ts-ignore
   const handler = createRequestHandler(build, import.meta.env?.MODE);
 
@@ -19,11 +29,18 @@ app.use(async (c) => {
   const context = {
     cloudflare: {
       env: c.env,
+      ctx: c.executionCtx,
       next,
     },
   };
 
-  return handler(c.req.raw, context);
+  const response = await handler(c.req.raw, context);
+
+  if (!isUser && response.status === 200) {
+    c.executionCtx.waitUntil(cache.put(c.req.raw, response.clone()));
+  }
+
+  return response;
 });
 
 export default app;

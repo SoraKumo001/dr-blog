@@ -154,7 +154,7 @@ const Mermaid = ({
   return svg ? (
     <pre
       {...props}
-      className="rounded border bg-white p-2 [&_*]:overflow-visible"
+      className="rounded-sm border bg-white p-2 **:overflow-visible"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   ) : (
@@ -198,7 +198,7 @@ const Code = ({
           return (
             <div
               style={style}
-              className="overflow-x-auto rounded py-1 font-mono"
+              className="overflow-x-auto rounded-sm py-1 font-mono"
               data-depth={dataDepth}
             >
               {tokens.slice(0, -1).map((line, i) => (
@@ -223,7 +223,7 @@ const Code = ({
                         key={key}
                         {...getTokenProps({ token })}
                         className={classNames(
-                          getTokenProps({ token }).className
+                          getTokenProps({ token }).className,
                         )}
                       />
                     ))}
