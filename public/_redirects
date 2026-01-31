@@ -1,0 +1,4 @@
+/wordpress/* https://localhost 301
+/wp-content/* https://localhost 301
+/wp-includes/* https://localhost 301
+/wp-admin/* https://localhost 301
