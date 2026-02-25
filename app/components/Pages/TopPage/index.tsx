@@ -19,7 +19,7 @@ export const TopPage: FC<Props> = ({}) => {
     if (!data?.findManyPost) return undefined;
     return [...data.findManyPost].sort(
       (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
     );
   }, [data]);
   const categories = useMemo(() => {
@@ -36,7 +36,7 @@ export const TopPage: FC<Props> = ({}) => {
       }),
     ]);
     return Object.entries(categoryPosts).sort(([, a], [, b]) =>
-      a.name < b.name ? -1 : 1
+      a.name < b.name ? -1 : 1,
     );
   }, [data]);
   const system = dataSystem?.findFirstSystem;
@@ -46,7 +46,7 @@ export const TopPage: FC<Props> = ({}) => {
   return (
     <>
       <Title>{system.description || "Article List"}</Title>
-      <div className="flex size-full flex-col gap-16 overflow-auto p-8">
+      <div className="flex size-full flex-col gap-16 p-8">
         <PostList id="news" title="新着順" posts={posts} limit={10} />
         {categories.map(([id, { name, posts }]) => (
           <PostList key={id} id={id} title={name} posts={posts} limit={6} />

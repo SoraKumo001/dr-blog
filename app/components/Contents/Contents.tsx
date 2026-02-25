@@ -40,7 +40,7 @@ export const Contents: FC<Props> = ({ id }) => {
   const session = useUser();
   const categories = useMemo(() => {
     return [...(data?.findFirstPost?.categories ?? [])].sort((a, b) =>
-      a.name < b.name ? -1 : 1
+      a.name < b.name ? -1 : 1,
     );
   }, [data]);
   const getFirebaseUrl = useFirebaseUrl();
@@ -58,7 +58,7 @@ export const Contents: FC<Props> = ({ id }) => {
         />
       </Head>
       <Title image={image}>{data.findFirstPost.title}</Title>
-      <div className="relative h-full w-full overflow-x-hidden overflow-y-scroll">
+      <div className="relative w-full">
         {session && (
           <Button
             variant="outline"
@@ -91,13 +91,13 @@ export const Contents: FC<Props> = ({ id }) => {
           )}
           <div className="flex-1">{data.findFirstPost.title}</div>
         </h1>
-        <div className="m-auto flex max-w-[1440px] flex-row-reverse flex-wrap items-start justify-center gap-2 px-2">
+        <div className="m-auto flex max-w-360 flex-row-reverse flex-wrap items-start justify-center gap-2 px-2">
           <ContentTable
-            className="sticky top-0 mx-auto max-w-xs px-4"
+            className="sticky top-16 mx-auto max-w-xs px-4"
             title={data.findFirstPost.title}
             tree={tree}
           />
-          <div className={"w-full max-w-[1024px] overflow-hidden"}>
+          <div className={"w-full max-w-5xl overflow-hidden"}>
             <div className={"px-8 text-end font-mono text-gray-500"}>
               <span className="inline-block w-32">publication: </span>
               <span className="inline-block w-24">

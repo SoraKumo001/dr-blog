@@ -47,13 +47,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   <NextSSRWait>
                     <HeadRoot />
                   </NextSSRWait>
-                  <CloudflareFonts href="https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400;700&display=swap" />
+                  <CloudflareFonts
+                    href={[
+                      "https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400;700&display=swap",
+                      "https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap",
+                    ]}
+                  />
                 </head>
                 <body>
-                  <div className={"flex h-screen flex-col"}>
+                  <div className={"flex flex-col"}>
                     <Header />
                     <main
-                      className={`relative flex-1 overflow-hidden`}
+                      className={"relative flex-1"}
                       style={{
                         viewTransitionName: "page-content",
                       }}

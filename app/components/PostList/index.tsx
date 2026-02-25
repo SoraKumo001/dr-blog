@@ -26,18 +26,18 @@ export const PostList: FC<Props> = ({ id, title, posts, limit }) => {
   const getFirebaseUrl = useFirebaseUrl();
 
   return (
-    <div>
+    <>
       <div className="m-auto mb-4 border-b text-center text-3xl text-blue-900">
         <Link to={`/category/${id ?? ""}`} viewTransition>
           📚 {title}
         </Link>
       </div>
-      <div className="m-auto flex max-w-310 flex-wrap justify-center gap-4">
+      <div className="m-auto flex flex-wrap justify-center gap-4">
         {list.map((post) => (
           <Link
             key={post.id}
             className={classNames(
-              "flex h-32 w-[min(90%,600px)] max-w-150 items-center gap-3 overflow-hidden rounded-lg border px-4 py-8 shadow hover:bg-gray-100 bg-gray-200",
+              "flex h-32 w-[min(90%,600px)] items-center gap-3 overflow-hidden rounded-lg border px-4 py-8 shadow hover:bg-gray-100 bg-gray-200",
               post.published ? "border-blue-400 bg-gray-200" : "border-red-300",
             )}
             to={`/contents/${post.id}`}
@@ -69,10 +69,7 @@ export const PostList: FC<Props> = ({ id, title, posts, limit }) => {
           </Link>
         ))}
         {list.length % 2 === 1 && (
-          <div
-            className="h-32 w-[min(90%,600px)] max-w-[600px]"
-            style={{ visibility: "hidden" }}
-          />
+          <div className="h-32 w-150" style={{ visibility: "hidden" }} />
         )}
       </div>
       {limit && posts.length > limit && (
@@ -89,6 +86,6 @@ export const PostList: FC<Props> = ({ id, title, posts, limit }) => {
           </Link>
         </div>
       )}
-    </div>
+    </>
   );
 };

@@ -34,8 +34,8 @@ export const ContentTable: FC<Props> = ({ className, tree, title }) => {
   return (
     <nav
       className={classNames(
-        " max-h-[calc(100vh-64px)] min-w-[300px] overflow-y-auto border bg-white",
-        className
+        " max-h-[calc(100vh-64px)] min-w-75 overflow-y-auto border bg-white",
+        className,
       )}
     >
       <div className="border-b text-center font-bold">Index</div>
