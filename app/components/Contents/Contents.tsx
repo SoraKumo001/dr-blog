@@ -72,12 +72,12 @@ export const Contents: FC<Props> = ({ id }) => {
           </Button>
         )}
         <h1
-          className="m-4 inline-flex flex-nowrap items-center justify-center gap-4 border-b-2 border-gray-300 p-2 px-8 text-center text-3xl leading-10"
+          className="m-4 inline-flex flex-nowrap items-center justify-center gap-4 border-b-2 border-gray-300 p-2 px-8 text-center text-3xl/10"
           id="header-top"
         >
           {image ? (
             <Image
-              className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full text-base"
+              className="flex size-20 items-center justify-center overflow-hidden rounded-full text-base"
               src={image}
               alt="Eye catch"
               width={80}
@@ -85,7 +85,7 @@ export const Contents: FC<Props> = ({ id }) => {
               isOptimize
             />
           ) : (
-            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full text-6xl">
+            <div className="flex size-20 items-center justify-center overflow-hidden rounded-full text-6xl">
               📖
             </div>
           )}
@@ -115,7 +115,7 @@ export const Contents: FC<Props> = ({ id }) => {
                 {categories.map(({ id, name }) => (
                   <Link
                     className={
-                      "rounded bg-blue-500 px-4 py-2 text-white shadow hover:bg-blue-300"
+                      "rounded-sm bg-blue-500 px-4 py-2 text-white shadow-sm hover:bg-blue-300"
                     }
                     key={id}
                     to={`/category/${id}`}
@@ -125,7 +125,7 @@ export const Contents: FC<Props> = ({ id }) => {
                 ))}
               </div>
             )}
-            <MarkdownContent className="relative z-10 flex-1 overflow-x-hidden rounded border bg-slate-100 p-4 shadow">
+            <MarkdownContent className="relative z-10 flex-1 overflow-x-hidden rounded-sm border bg-slate-100 p-4 shadow-sm">
               {children}
             </MarkdownContent>
           </div>

@@ -9,16 +9,15 @@ const useSignInGoogle = () => {
   const navigate = useNavigate();
   const signIn = useSignIn();
   const handleSignIn = async () => {
-    const { GoogleAuthProvider, getAuth, signInWithPopup } = await import(
-      "@firebase/auth"
-    );
+    const { GoogleAuthProvider, getAuth, signInWithPopup } =
+      await import("@firebase/auth");
     const auth = getAuth(
       firebaseApp({
         apiKey: env.NEXT_PUBLIC_apiKey,
         projectId: env.NEXT_PUBLIC_projectId,
         authDomain: `${env.NEXT_PUBLIC_projectId}.firebaseapp.com`,
         storageBucket: `${env.NEXT_PUBLIC_projectId}.appspot.com`,
-      })
+      }),
     );
     const provider = new GoogleAuthProvider();
 
@@ -35,7 +34,7 @@ const Page = () => {
   const handleSignIn = useSignInGoogle();
 
   return (
-    <div className="flex size-full items-center justify-center">
+    <div className="fixed flex size-full items-center justify-center">
       <Button onClick={handleSignIn}>SignIn</Button>
     </div>
   );

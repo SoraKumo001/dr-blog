@@ -89,7 +89,7 @@ export const Editor: FC<Props> = ({ id }) => {
                 p.lineNumber,
                 p.column,
                 p.lineNumber,
-                p.column
+                p.column,
               ),
               text: `![{"width":"${size.width}px","height":"${size.height}px"}](${v.data?.uploadPostImage.id})`,
             },
@@ -99,7 +99,7 @@ export const Editor: FC<Props> = ({ id }) => {
     }
   };
   const handleDrop: DOMAttributes<HTMLDivElement>["onDropCapture"] = (
-    event
+    event,
   ) => {
     event.stopPropagation();
     event.preventDefault();
@@ -107,7 +107,7 @@ export const Editor: FC<Props> = ({ id }) => {
     if (editor && monaco) {
       const p = editor.getTargetAtClientPoint(
         event.clientX,
-        event.clientY
+        event.clientY,
       )?.position;
       if (p) {
         const file = event.dataTransfer.files[0];
@@ -122,7 +122,7 @@ export const Editor: FC<Props> = ({ id }) => {
                     p.lineNumber,
                     p.column,
                     p.lineNumber,
-                    p.column
+                    p.column,
                   ),
                   text: `![{"width":"${size.width}px","height":"${size.height}px"}](${v.data?.uploadPostImage.id})`,
                 },
@@ -135,7 +135,7 @@ export const Editor: FC<Props> = ({ id }) => {
   };
 
   const handleDragOver: DOMAttributes<HTMLDivElement>["onDragOver"] = (
-    event
+    event,
   ) => {
     event.preventDefault();
   };
@@ -184,9 +184,12 @@ export const Editor: FC<Props> = ({ id }) => {
   });
   if (fetching || !post) return null;
   return (
-    <form className="flex h-full flex-col" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="fixed top-12 bottom-0 flex w-full flex-col"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <ToolBar post={post} control={control} onCard={setCard} />
-      <div className="flex h-full flex-1 overflow-hidden">
+      <div className="top-0 flex h-full flex-1 overflow-hidden">
         <Separator>
           <div
             className="h-full"

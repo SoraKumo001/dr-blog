@@ -42,7 +42,7 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
   const categoryList = useMemo(() => {
     if (!data) return undefined;
     return [...(data?.findManyCategory ?? [])].sort((a, b) =>
-      a.name < b.name ? -1 : 1
+      a.name < b.name ? -1 : 1,
     );
   }, [data]);
   const [isConverting, convertImage] = useConvertImage();
@@ -59,7 +59,7 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
     minute: "2-digit",
   } as const;
   return (
-    <div className="mb-1 shadow">
+    <div className="mb-1 shadow-sm">
       <div className="flex flex-wrap items-center gap-2 p-2">
         <Button
           type="button"
@@ -112,8 +112,8 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
                           e.target.checked
                             ? [...field.value, e.target.value]
                             : field.value.filter(
-                                (name) => name !== e.target.value
-                              )
+                                (name) => name !== e.target.value,
+                              ),
                         )
                       }
                       value={id}
@@ -178,7 +178,7 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
       <div
         className={classNames(
           "flex flex-wrap gap-2 p-2 items-center",
-          !isExpand && "hidden"
+          !isExpand && "hidden",
         )}
       >
         <ImageDragField
@@ -186,7 +186,7 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
           onChange={async (blob) => {
             if (blob)
               await convertImage(blob, 256, 256).then((b) =>
-                onCard(b && b.size < blob.size ? b : blob)
+                onCard(b && b.size < blob.size ? b : blob),
               );
             else onCard(null);
           }}

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { rgbaToThumbHash } from "thumbhash";
-import { optimizeImage } from "wasm-image-optimization/web-worker";
+import { optimizeImage } from "wasm-image-optimization/workers";
 import { hashToFileName } from "./thumbhash";
 import { arrayBufferToBase64 } from "~/server/libs/buffer";
 
@@ -15,7 +15,7 @@ export const useConvertImage = () => {
       setIsConverting(false);
       return value;
     },
-    [setIsConverting]
+    [setIsConverting],
   );
   return [isConverting, convert] as const;
 };
@@ -43,7 +43,7 @@ const getBlurHash = (ctx: CanvasRenderingContext2D) => {
 export const convertImage = async (
   blob: Blob,
   width?: number,
-  height?: number
+  height?: number,
 ): Promise<File | Blob | null> => {
   if (typeof window === "undefined") {
     return blob;
@@ -77,18 +77,15 @@ export const convertImage = async (
   if (!ctx) return null;
   ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, outWidth, outHeight);
 
-  const value =
-    blob.type !== "image/gif"
-      ? await optimizeImage({
-          image: await blob.arrayBuffer(),
-          quality: 90,
-        })
-      : await blob.arrayBuffer();
-  if (!value) return null;
+  const { data } = await optimizeImage({
+    image: await blob.arrayBuffer(),
+    quality: 90,
+  });
+  if (!data) return null;
 
   const hash = getBlurHash(ctx);
   const filename = hashToFileName(hash);
-  return new File([value], filename, {
+  return new File([new Uint8Array(data)], filename, {
     type: blob.type === "image/gif" ? "image/gif" : `image/${type}`,
   });
 };
