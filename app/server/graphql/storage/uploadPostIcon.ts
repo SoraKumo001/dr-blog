@@ -10,7 +10,7 @@ export const uploadPostIcon = builder.mutationField("uploadPostIcon", (t) =>
       postId: t.arg({ type: "String", required: true }),
       file: t.arg({ type: "Upload" }),
     },
-    resolve: async (_query, _root, { postId, file }, { db, user, env }) => {
+    resolve: async (_query, _root, { postId, file }, { db, user, env , storageService }) => {
       if (!user) throw new Error("Unauthorized");
       if (!file) {
         const firestore = await db.query.post
@@ -24,9 +24,7 @@ export const uploadPostIcon = builder.mutationField("uploadPostIcon", (t) =>
         return firestore;
       }
       const firestore = await uploadFile({
-        projectId: env.GOOGLE_PROJECT_ID ?? "",
-        clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
-        privateKey: env.GOOGLE_PRIVATE_KEY ?? "",
+        storageService,
         binary: file,
       });
       const card = await db
@@ -42,11 +40,7 @@ export const uploadPostIcon = builder.mutationField("uploadPostIcon", (t) =>
                 where: { id: { eq: cardId } },
               });
         });
-      await isolatedFiles({
-        projectId: env.GOOGLE_PROJECT_ID ?? "",
-        clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
-        privateKey: env.GOOGLE_PRIVATE_KEY ?? "",
-      });
+      await isolatedFiles({ storageService });
       if (!card) throw new Error("card is not found");
       return card;
     },

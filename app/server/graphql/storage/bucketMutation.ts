@@ -1,7 +1,6 @@
-import { storage } from "../../libs/getStorage";
+import { BucketObjectType } from "./BucketObject";
+import { CorsInput } from "./CorsInput";
 import { builder } from "../builder";
-import { CorsInput } from "../inputs";
-import { BucketObjectType } from "../objects";
 
 export const bucket = builder.mutationField("bucket", (t) =>
   t.field({
@@ -9,7 +8,7 @@ export const bucket = builder.mutationField("bucket", (t) =>
     args: {
       cors: t.arg({ type: [CorsInput] }),
     },
-    resolve: async (_parent, { cors }, { env, user }) => {
+    resolve: async (_parent, { cors }, { env, user , storageService }) => {
       if (!user) throw new Error("Unauthorized");
       const s = storage({
         projectId: env.GOOGLE_PROJECT_ID ?? "",

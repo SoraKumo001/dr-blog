@@ -40,7 +40,7 @@ export const Categories: FC<Props> = ({ id }) => {
   return (
     <>
       <Title>一覧</Title>
-      <div className="flex h-full w-full flex-col gap-16 overflow-auto p-8">
+      <div className="flex size-full flex-col gap-16 overflow-auto p-8">
         <PostList
           title={
             id === "news" ? "新着順" : category?.findFirstCategory?.name ?? ""

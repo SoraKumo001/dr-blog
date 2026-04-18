@@ -5,6 +5,7 @@ import { format } from "sql-formatter";
 import type { Hyperdrive } from "@cloudflare/workers-types/experimental";
 import type { serialize } from "cookie";
 import type { user } from "~/db/schema";
+import type { storage } from "~/server/libs/getStorage";
 import { relations } from "~/db/relations";
 export type Context = {
   req: Request;
@@ -13,6 +14,7 @@ export type Context = {
   cookies: { [key: string]: string };
   setCookie: typeof serialize;
   env: { [key: string]: string };
+  storageService: ReturnType<typeof storage>;
 };
 
 type Env = {

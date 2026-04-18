@@ -1,31 +1,17 @@
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
 import { useRef, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
 import { Separator } from "../../Commons/Separator";
 import { MarkdownContent } from "../../MarkdownContent";
 import { ToolBar } from "../ToolBar";
 import type { OnMount } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import type { DOMAttributes, FC } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import {
-  useFindPostQuery,
-  useUpdatePostMutation,
-  useUploadPostIconMutation,
-  useUploadPostImageMutation,
-} from "~/generated/graphql";
 import { useLoading } from "~/hooks/useLoading";
-import { useNotification } from "~/hooks/useNotification";
+import { usePostEditor, type FormInput } from "~/hooks/usePostEditor";
 import { getImageSize, useConvertImage } from "~/libs/convertImage";
 import { useMarkdown } from "~/libs/markdownConverter";
 
-export type FormInput = {
-  categories: string[];
-  title: string;
-  published: boolean;
-  publishedAt: Date;
-  card?: Blob | null;
-};
+export type { FormInput };
 
 interface Props {
   id: string;
@@ -34,18 +20,26 @@ interface Props {
 /**
  * Editor
  *
- * @param {Props} { }
+ * @param {Props} { id }
  */
 export const Editor: FC<Props> = ({ id }) => {
-  const [{ fetching: uploadFeting }, uploadFile] = useUploadPostImageMutation();
-  const [{ fetching: uploadCardFeting }, uploadPostIcon] =
-    useUploadPostIconMutation();
+  const {
+    post,
+    content,
+    setEditorContent,
+    control,
+    handleSubmit,
+    onSubmit,
+    card,
+    setCard,
+    uploadPostImage,
+    isLoading,
+  } = usePostEditor(id);
+
   const monaco = useMonaco();
   const refEditor = useRef<editor.IStandaloneCodeEditor>(null);
   const refMarkdown = useRef<HTMLDivElement>(null);
   const [currentLine, setCurrentLine] = useState(1);
-  const [card, setCard] = useState<Blob | null | undefined>();
-  const { control, handleSubmit } = useForm<FormInput>();
   const [isConverting, convertImage] = useConvertImage();
   const [, startTransition] = useTransition();
 
@@ -60,8 +54,8 @@ export const Editor: FC<Props> = ({ id }) => {
         const node = refMarkdown.current;
         if (node && event.source !== "api") {
           const nodes = node.querySelectorAll<HTMLElement>("[data-line]");
-          const target = Array.from(nodes).find((node) => {
-            const nodeLine = node.dataset.line?.match(/(\d+)/)?.[1];
+          const target = Array.from(nodes).find((n) => {
+            const nodeLine = n.dataset.line?.match(/(\d+)/)?.[1];
             if (!currentLine) return false;
             return currentLine === Number(nodeLine);
           });
@@ -75,32 +69,36 @@ export const Editor: FC<Props> = ({ id }) => {
       });
     });
   };
-  const handleUpload = (file: File) => {
+
+  const processAndInsertImage = async (file: File) => {
     const editor = refEditor.current;
     const p = editor?.getPosition();
     if (editor && monaco && p) {
-      convertImage(file).then((value) => {
-        if (!value) throw "convert error";
-        uploadFile({ postId: id, file: value }).then(async (v) => {
-          const size = await getImageSize(value);
-          editor.executeEdits("", [
-            {
-              range: new monaco.Range(
-                p.lineNumber,
-                p.column,
-                p.lineNumber,
-                p.column,
-              ),
-              text: `![{"width":"${size.width}px","height":"${size.height}px"}](${v.data?.uploadPostImage.id})`,
-            },
-          ]);
-        });
-      });
+      const converted = await convertImage(file);
+      if (!converted) throw "convert error";
+      const result = await uploadPostImage(converted);
+      if (result.data?.uploadPostImage.id) {
+        const size = await getImageSize(converted);
+        editor.executeEdits("", [
+          {
+            range: new monaco.Range(
+              p.lineNumber,
+              p.column,
+              p.lineNumber,
+              p.column,
+            ),
+            text: `![{"width":"${size.width}px","height":"${size.height}px"}](${result.data.uploadPostImage.id})`,
+          },
+        ]);
+      }
     }
   };
-  const handleDrop: DOMAttributes<HTMLDivElement>["onDropCapture"] = (
-    event,
-  ) => {
+
+  const handleUpload = (file: File) => {
+    processAndInsertImage(file).catch(console.error);
+  };
+
+  const handleDrop: DOMAttributes<HTMLDivElement>["onDropCapture"] = (event) => {
     event.stopPropagation();
     event.preventDefault();
     const editor = refEditor.current;
@@ -110,79 +108,28 @@ export const Editor: FC<Props> = ({ id }) => {
         event.clientY,
       )?.position;
       if (p) {
+        editor.setPosition(p);
         const file = event.dataTransfer.files[0];
         if (file.type.startsWith("image/")) {
-          convertImage(file).then((value) => {
-            if (!value) throw "convert error";
-            uploadFile({ postId: id, file: value }).then(async (v) => {
-              const size = await getImageSize(value);
-              editor.executeEdits("", [
-                {
-                  range: new monaco.Range(
-                    p.lineNumber,
-                    p.column,
-                    p.lineNumber,
-                    p.column,
-                  ),
-                  text: `![{"width":"${size.width}px","height":"${size.height}px"}](${v.data?.uploadPostImage.id})`,
-                },
-              ]);
-            });
-          });
+          handleUpload(file);
         }
       }
     }
   };
 
-  const handleDragOver: DOMAttributes<HTMLDivElement>["onDragOver"] = (
-    event,
-  ) => {
+  const handleDragOver: DOMAttributes<HTMLDivElement>["onDragOver"] = (event) => {
     event.preventDefault();
   };
-  const sendNotification = useNotification();
 
-  const onSubmit: SubmitHandler<FormInput> = ({
-    title,
-    categories,
-    published,
-    publishedAt,
-  }) => {
-    updatePost({
-      postId: id,
-      title,
-      content,
-      published,
-      cardId: card === null ? null : undefined,
-      categories: {
-        set: categories.map((id) => ({ id })),
-      },
-      publishedAt: new Date(publishedAt).toISOString(),
-    })
-      .then((result) => {
-        if (result.error || !card) return result;
-        return uploadPostIcon({ postId: id, file: card });
-      })
-      .then((result) => {
-        sendNotification(result.error ? "Error" : "Update Post Success");
-      });
-  };
-
-  const [{ fetching, data }] = useFindPostQuery({ variables: { postId: id } });
-  const [{ fetching: updateFetching }, updatePost] = useUpdatePostMutation();
-  const [content, setContent] = useState<string>();
-  const [, update] = useTransition();
-  const post = data?.findFirstPost;
-  useLoading([
-    fetching,
-    updateFetching,
-    uploadCardFeting,
-    uploadFeting,
-    isConverting,
-  ]);
+  useLoading([isLoading, isConverting]);
+  
   const [children] = useMarkdown({
-    markdown: content ?? data?.findFirstPost?.content,
+    markdown: content ?? post?.content,
   });
-  if (fetching || !post) return null;
+
+  if (isLoading && !post) return null;
+  if (!post) return null;
+
   return (
     <form
       className="fixed top-12 bottom-0 flex w-full flex-col"
@@ -214,7 +161,7 @@ export const Editor: FC<Props> = ({ id }) => {
             <MonacoEditor
               language="markdown"
               defaultValue={content ?? post.content}
-              onChange={(e) => update(() => setContent(e ?? ""))}
+              onChange={(e) => setEditorContent(e ?? "")}
               onMount={handleEditorDidMount}
               options={{
                 renderControlCharacters: true,

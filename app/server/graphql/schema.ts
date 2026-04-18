@@ -1,12 +1,16 @@
 import { GraphQLScalarType } from "graphql";
+import * as auth from "./auth";
 import { builder } from "./builder";
-import * as mutations from "./mutations";
-import * as queries from "./queries";
+import * as post from "./post";
+import * as storage from "./storage";
+import * as system from "./system";
 
 // dummy
 const dummy = () => ({
-  queries,
-  mutations,
+  auth,
+  system,
+  post,
+  storage,
 });
 dummy();
 

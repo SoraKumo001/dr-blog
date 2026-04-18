@@ -4,6 +4,8 @@ import { type Context, db } from "../server/db";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { getUserFromToken } from "~/libs/getUserFromToken";
 import { schema } from "~/server/graphql/schema";
+import { storage } from "~/server/libs/getStorage";
+
 
 const yoga = createYoga<
   {
@@ -28,6 +30,13 @@ const yoga = createYoga<
       responseCookies.push(result);
       return result;
     };
+    
+    const storageService = storage({
+      projectId: env.GOOGLE_PROJECT_ID ?? "",
+      clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
+      privateKey: env.GOOGLE_PRIVATE_KEY ?? "",
+    });
+
     return {
       req,
       env,
@@ -35,6 +44,7 @@ const yoga = createYoga<
       user,
       cookies,
       setCookie,
+      storageService,
     } as never;
   },
 });

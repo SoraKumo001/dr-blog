@@ -23,12 +23,19 @@ const createSchemaTable = (): PgTableFn<string | undefined> => {
 
 const table = createSchemaTable();
 
+export const timestamps = {
+  createdAt: timestamp({ precision: 3 }).notNull().defaultNow(),
+  updatedAt: timestamp({ precision: 3 })
+    .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
+};
+
 export const user = table("User", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   email: text().notNull().unique(),
   name: text().notNull().default("User"),
-  createdAt: timestamp({ precision: 3 }).notNull().defaultNow(),
-  updatedAt: timestamp({ precision: 3 }).notNull().defaultNow(),
+  ...timestamps,
 });
 
 export const post = table("Post", {
@@ -46,11 +53,7 @@ export const post = table("Post", {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
-  createdAt: timestamp({ precision: 3 }).notNull().defaultNow(),
-  updatedAt: timestamp({ precision: 3 })
-    .notNull()
-    .defaultNow()
-    .$onUpdateFn(() => new Date()),
+  ...timestamps,
   publishedAt: timestamp("publishedAt", { precision: 3 })
     .notNull()
     .defaultNow(),
@@ -59,11 +62,7 @@ export const post = table("Post", {
 export const category = table("Category", {
   id: uuid().notNull().primaryKey().defaultRandom(),
   name: text().notNull(),
-  createdAt: timestamp("createdAt", { precision: 3 }).notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt", { precision: 3 })
-    .notNull()
-    .defaultNow()
-    .$onUpdateFn(() => new Date()),
+  ...timestamps,
 });
 
 export const system = table("System", {
@@ -78,22 +77,14 @@ export const system = table("System", {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
-  createdAt: timestamp({ precision: 3 }).notNull().defaultNow(),
-  updatedAt: timestamp({ precision: 3 })
-    .notNull()
-    .defaultNow()
-    .$onUpdateFn(() => new Date()),
+  ...timestamps,
 });
 
 export const fireStore = table("FireStore", {
   id: text().notNull().primaryKey(),
   name: text().notNull(),
   mimeType: text().notNull(),
-  createdAt: timestamp({ precision: 3 }).notNull().defaultNow(),
-  updatedAt: timestamp({ precision: 3 })
-    .notNull()
-    .defaultNow()
-    .$onUpdateFn(() => new Date()),
+  ...timestamps,
 });
 
 export const categoryToPost = table(

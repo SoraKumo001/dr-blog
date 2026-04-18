@@ -128,10 +128,10 @@ export const Backup: FC<Props> = () => {
       <div className="m-auto max-w-2xl pt-8">
         <h1>バックアップ/リストア</h1>
         <div className="grid cursor-pointer gap-4">
-          <a className="block rounded border p-4" onClick={handleBackup}>
+          <a className="block rounded-sm border p-4" onClick={handleBackup}>
             バックアップ
           </a>
-          <a className="block rounded border p-4" onClick={handleRestore}>
+          <a className="block rounded-sm border p-4" onClick={handleRestore}>
             リストア
           </a>
         </div>

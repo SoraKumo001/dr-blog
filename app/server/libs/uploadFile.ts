@@ -1,22 +1,18 @@
 import { eq, and, or, isNull } from "drizzle-orm";
 import { db } from "../db";
-import { storage } from "./getStorage";
+import type { storage } from "./getStorage";
 import * as schema from "~/db/schema";
 
 export const uploadFile = async ({
   binary,
-  projectId,
-  clientEmail,
-  privateKey,
+  storageService,
 }: {
-  projectId: string;
-  clientEmail: string;
-  privateKey: string;
+  storageService: ReturnType<typeof storage>;
   binary: File;
 }) => {
   const uuid = (await import("pure-uuid")).default;
   const id = `${new uuid(4).format()}-[${binary.name}]`;
-  await storage({ projectId, clientEmail, privateKey: privateKey }).upload({
+  await storageService.upload({
     name: id,
     file: binary,
     published: true,
@@ -30,13 +26,9 @@ export const uploadFile = async ({
 };
 
 export const isolatedFiles = async ({
-  projectId,
-  clientEmail,
-  privateKey,
+  storageService,
 }: {
-  projectId: string;
-  clientEmail: string;
-  privateKey: string;
+  storageService: ReturnType<typeof storage>;
 }) => {
   const files = await db
     .selectDistinctOn([schema.fireStore.id], { id: schema.fireStore.id })
@@ -62,13 +54,8 @@ export const isolatedFiles = async ({
       )
     )
     .execute();
-  const s = storage({
-    projectId,
-    clientEmail,
-    privateKey,
-  });
   for (const { id } of files) {
-    await s
+    await storageService
       .del({ name: id })
       .catch(undefined)
       .catch(() => undefined);
@@ -77,25 +64,16 @@ export const isolatedFiles = async ({
 };
 
 export const isolatedFirebase = async ({
-  projectId,
-  clientEmail,
-  privateKey,
+  storageService,
 }: {
-  projectId: string;
-  clientEmail: string;
-  privateKey: string;
+  storageService: ReturnType<typeof storage>;
 }) => {
-  const s = storage({
-    projectId,
-    clientEmail,
-    privateKey,
-  });
   const files = await db.select().from(schema.fireStore).execute();
-  const firebaseFiles = await s.list({});
+  const firebaseFiles = await storageService.list({});
   const setFiles = new Set(files.map((v) => v.id));
   for (const { name } of firebaseFiles) {
     if (!setFiles.has(name)) {
-      await s.del({ name }).catch((e) => console.error(e));
+      await storageService.del({ name }).catch((e) => console.error(e));
     }
   }
 };

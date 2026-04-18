@@ -43,7 +43,7 @@ export const PostList: FC<Props> = ({ id, title, posts, limit }) => {
             to={`/contents/${post.id}`}
             viewTransition
           >
-            <div className="flex w-20 items-center justify-center rounded">
+            <div className="flex w-20 items-center justify-center rounded-sm">
               {post.cardId ? (
                 <Image
                   className="w-20 rounded-full"
