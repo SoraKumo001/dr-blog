@@ -6,10 +6,15 @@ import { useFirebaseUrl } from "~/hooks/useFirebaseUrl";
 import { classNames } from "~/libs/classNames";
 import { DateString } from "~/libs/dateString";
 
+type PostItem = Pick<
+  NonNullable<Query["findManyPost"]>[0],
+  "id" | "title" | "published" | "cardId" | "publishedAt" | "updatedAt"
+>;
+
 interface Props {
   id?: string;
   title: string;
-  posts: Query["findManyPost"];
+  posts: PostItem[];
   limit?: number;
 }
 
