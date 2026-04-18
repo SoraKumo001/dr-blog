@@ -10,7 +10,12 @@ export const uploadPostImage = builder.mutationField("uploadPostImage", (t) =>
       postId: t.arg({ type: "String", required: true }),
       file: t.arg({ type: "Upload", required: true }),
     },
-    resolve: async (_query, _root, { postId, file }, { db, user, env , storageService }) => {
+    resolve: async (
+      _query,
+      _root,
+      { postId, file },
+      { db, user, storageService },
+    ) => {
       if (!user) throw new Error("Unauthorized");
       const firestore = await uploadFile({
         storageService,
@@ -22,5 +27,5 @@ export const uploadPostImage = builder.mutationField("uploadPostImage", (t) =>
       });
       return firestore;
     },
-  })
+  }),
 );

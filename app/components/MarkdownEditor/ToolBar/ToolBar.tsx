@@ -51,13 +51,12 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
   useLoading([fetching, updateFetching, isConverting]);
   if (!categoryList || !post) return null;
   const url = post.cardId && getFirebaseUrl(post.cardId);
-  const dateOptions = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  } as const;
+  const formatDatetimeLocal = (dateString?: string | Date | number | null) => {
+    if (!dateString) return undefined;
+    const d = new Date(dateString);
+    const offset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - offset).toISOString().slice(0, 16);
+  };
   return (
     <div className="mb-1 shadow-sm">
       <div className="flex flex-wrap items-center gap-2 p-2">
@@ -135,9 +134,8 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
             lang="ja"
             label="PublishedAt"
             size="sm"
-            defaultValue={new Date(post.publishedAt)
-              .toLocaleString(undefined, dateOptions)
-              .replaceAll("/", "-")}
+            suppressHydrationWarning={true}
+            defaultValue={formatDatetimeLocal(post.publishedAt)}
             {...control.register("publishedAt")}
           />
         )}
@@ -146,9 +144,8 @@ export const ToolBar: FC<Props> = ({ post, control, onCard }) => {
             type="datetime-local"
             label="UpdatedAt"
             size="sm"
-            defaultValue={new Date(post.updatedAt)
-              .toLocaleString(undefined, dateOptions)
-              .replaceAll("/", "-")}
+            suppressHydrationWarning={true}
+            defaultValue={formatDatetimeLocal(post.updatedAt)}
           />
         )}
         <Button

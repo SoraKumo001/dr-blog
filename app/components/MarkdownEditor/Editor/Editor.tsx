@@ -30,7 +30,6 @@ export const Editor: FC<Props> = ({ id }) => {
     control,
     handleSubmit,
     onSubmit,
-    card,
     setCard,
     uploadPostImage,
     isLoading,
@@ -98,7 +97,9 @@ export const Editor: FC<Props> = ({ id }) => {
     processAndInsertImage(file).catch(console.error);
   };
 
-  const handleDrop: DOMAttributes<HTMLDivElement>["onDropCapture"] = (event) => {
+  const handleDrop: DOMAttributes<HTMLDivElement>["onDropCapture"] = (
+    event,
+  ) => {
     event.stopPropagation();
     event.preventDefault();
     const editor = refEditor.current;
@@ -117,12 +118,14 @@ export const Editor: FC<Props> = ({ id }) => {
     }
   };
 
-  const handleDragOver: DOMAttributes<HTMLDivElement>["onDragOver"] = (event) => {
+  const handleDragOver: DOMAttributes<HTMLDivElement>["onDragOver"] = (
+    event,
+  ) => {
     event.preventDefault();
   };
 
   useLoading([isLoading, isConverting]);
-  
+
   const [children] = useMarkdown({
     markdown: content ?? post?.content,
   });

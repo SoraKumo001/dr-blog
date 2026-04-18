@@ -10,7 +10,7 @@ export const uploadPostIcon = builder.mutationField("uploadPostIcon", (t) =>
       postId: t.arg({ type: "String", required: true }),
       file: t.arg({ type: "Upload" }),
     },
-    resolve: async (_query, _root, { postId, file }, { db, user, env , storageService }) => {
+    resolve: async (_query, _root, { postId, file }, { db, user, storageService }) => {
       if (!user) throw new Error("Unauthorized");
       if (!file) {
         const firestore = await db.query.post

@@ -9,22 +9,17 @@ export const restoreFiles = builder.mutationField("restoreFiles", (t) =>
     args: {
       files: t.arg({ type: ["Upload"], required: true }),
     },
-    resolve: async (_query, _root, { files }, { user, env, db , storageService }) => {
+    resolve: async (_query, _root, { files }, { user, db, storageService }) => {
       if (!user) {
         if (await db.$count(schema.user)) {
           throw new Error("Unauthorized");
         }
       }
-      const firebaseStorage = storage({
-        projectId: env.GOOGLE_PROJECT_ID ?? "",
-        clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
-        privateKey: env.GOOGLE_PRIVATE_KEY ?? "",
-      });
       const s = semaphore(1);
       return Promise.all(
         files.map(async (file) => {
           await s.acquire();
-          await firebaseStorage.upload({
+          await storageService.upload({
             file,
             name: file.name,
             published: true,

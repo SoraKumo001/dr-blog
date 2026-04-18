@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useEffect, useRef, useState } from "react";
+import { type FC, type ReactNode, useRef, useState } from "react";
 import { Button } from "react-daisyui";
 import { MdClose as CloseIcon } from "react-icons/md";
 import { FieldSet } from "../FieldSet";
@@ -30,10 +30,7 @@ export const ImageDragField: FC<Props> = ({
   const [isDrag, setDrag] = useState(false);
   const [image, setImage] = useState(url);
   const [active, setActive] = useState(false);
-  
-  useEffect(() => {
-    setImage(url);
-  }, [url]);
+
   const refInput = useRef<HTMLInputElement>(null);
   return (
     <FieldSet
@@ -42,7 +39,7 @@ export const ImageDragField: FC<Props> = ({
         "min-h-[64px] p-4",
         isDrag && "border-gray-700",
         className,
-        active && "ring-1 ring-offset-4"
+        active && "ring-1 ring-offset-4",
       )}
       label={placeholder}
       onDragOver={(e) => {

@@ -8,13 +8,8 @@ export const bucket = builder.mutationField("bucket", (t) =>
     args: {
       cors: t.arg({ type: [CorsInput] }),
     },
-    resolve: async (_parent, { cors }, { env, user , storageService }) => {
+    resolve: async (_parent, { cors }, { user, storageService }) => {
       if (!user) throw new Error("Unauthorized");
-      const s = storage({
-        projectId: env.GOOGLE_PROJECT_ID ?? "",
-        clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
-        privateKey: env.GOOGLE_PRIVATE_KEY ?? "",
-      });
       const cors2 = cors?.map((c) => {
         return {
           origin: c.origin ?? undefined,
@@ -23,8 +18,8 @@ export const bucket = builder.mutationField("bucket", (t) =>
           maxAgeSeconds: c.maxAgeSeconds ?? undefined,
         };
       });
-      s.updateBucket({ body: { cors: cors2 } });
-      return s.infoBucket({});
+      storageService.updateBucket({ body: { cors: cors2 } });
+      return storageService.infoBucket({});
     },
   })
 );
