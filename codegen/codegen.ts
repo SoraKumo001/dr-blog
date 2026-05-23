@@ -14,7 +14,7 @@ export const defineConfig: CodegenConfig = {
   overwrite: true,
   generates: {
     "app/generated/graphql.ts": {
-      plugins: ["typescript", "typescript-operations", "typescript-urql"],
+      plugins: ["typescript-operations", "typescript-urql"],
       config: {
         scalars: scalars(Object.values(resolvers)),
       },

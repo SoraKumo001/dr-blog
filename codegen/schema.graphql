@@ -339,7 +339,7 @@ input DateTimeInputOperator {
 }
 
 input Category_postsSet {
-  id: String!
+  id: String
 }
 
 input Category_posts {
@@ -347,7 +347,7 @@ input Category_posts {
 }
 
 input FireStore_postsSet {
-  id: String!
+  id: String
 }
 
 input FireStore_posts {
@@ -375,7 +375,7 @@ input BooleanInputOperator {
 }
 
 input Post_categoriesSet {
-  id: String!
+  id: String
 }
 
 input Post_categories {
@@ -531,14 +531,14 @@ type Query {
 }
 
 type Mutation {
-  normalizationPostFiles(postId: String!, removeAll: Boolean): Boolean
-  restore(file: Upload!): Boolean
   signIn(token: String): User
+  normalizationPostFiles(postId: String!, removeAll: Boolean): Boolean
+  bucket(cors: [CorsInput!]): BucketObject
   uploadPostIcon(postId: String!, file: Upload): FireStore
   uploadPostImage(postId: String!, file: Upload!): FireStore!
   uploadSystemIcon(file: Upload!): FireStore
   backup: String!
-  bucket(cors: [CorsInput!]): BucketObject
+  restore(file: Upload!): Boolean
   restoreFiles(files: [Upload!]!): [FireStore!]
   createOneCategory(input: CategoryCreate!): Category!
   createManyCategory(input: [CategoryCreate!]!): [Category!]!
