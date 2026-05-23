@@ -20,26 +20,33 @@ export const FirebaseImage = ({
   const isOptimize = !src.match(/https?:/);
   const url = isOptimize ? getFirebaseUrl(src) : src;
 
+  let style: Record<string, string> = {};
+  let parsed = false;
   try {
     const styleString = alt?.match(/^{.*}$/);
-    const style = styleString ? JSON.parse(alt ?? "") : {};
-    return edit ? (
-      <img
-        {...props}
-        src={url}
-        width={width ?? (style.width && parseInt(style.width))}
-        height={height ?? (style.height && parseInt(style.height))}
-        alt={alt}
-      />
-    ) : (
-      <Image
-        src={url}
-        width={width ?? (style.width && parseInt(style.width))}
-        height={height ?? (style.height && parseInt(style.height))}
-        alt={alt}
-        isOptimize={isOptimize}
-      />
-    );
+    style = styleString ? JSON.parse(alt ?? "") : {};
+    parsed = true;
   } catch {}
-  return <img {...props} src={src} alt={alt} />;
+
+  if (!parsed) {
+    return <img {...props} src={src} alt={alt} />;
+  }
+
+  return edit ? (
+    <img
+      {...props}
+      src={url}
+      width={width ?? (style.width ? parseInt(style.width) : undefined)}
+      height={height ?? (style.height ? parseInt(style.height) : undefined)}
+      alt={alt}
+    />
+  ) : (
+    <Image
+      src={url}
+      width={width ?? (style.width ? parseInt(style.width) : undefined)}
+      height={height ?? (style.height ? parseInt(style.height) : undefined)}
+      alt={alt}
+      isOptimize={isOptimize}
+    />
+  );
 };

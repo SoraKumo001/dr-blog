@@ -29,29 +29,36 @@ const FirebaseImage = ({
   const getFirebaseUrl = useFirebaseUrl();
   const isOptimize = !src?.match(/https?:/);
   const url = isOptimize && src ? getFirebaseUrl(src) : src;
+  let style: Record<string, string> = {};
+  let parsed = false;
   try {
-    const styleString = alt?.match(/^{.*}$/);
-    const style = styleString ? JSON.parse(alt ?? "") : {};
-    return edit ? (
-      <img
-        {...props}
-        src={url}
-        width={style.width && parseInt(style.width)}
-        height={style.height && parseInt(style.height)}
-        alt={alt}
-      />
-    ) : (
-      <Image
-        {...props}
-        src={url ?? ""}
-        width={style.width && parseInt(style.width)}
-        height={style.height && parseInt(style.height)}
-        alt={alt}
-        isOptimize={isOptimize}
-      />
-    );
+     const styleString = alt?.match(/^{.*}$/);
+     style = styleString ? JSON.parse(alt ?? "") : {};
+     parsed = true;
   } catch {}
-  return <img {...props} src={src} alt={alt} />;
+
+  if (!parsed) {
+    return <img {...props} src={src} alt={alt} />;
+  }
+
+  return edit ? (
+    <img
+      {...props}
+      src={url}
+      width={style.width ? parseInt(style.width) : undefined}
+      height={style.height ? parseInt(style.height) : undefined}
+      alt={alt}
+    />
+  ) : (
+    <Image
+      {...props}
+      src={url ?? ""}
+      width={style.width ? parseInt(style.width) : undefined}
+      height={style.height ? parseInt(style.height) : undefined}
+      alt={alt}
+      isOptimize={isOptimize}
+    />
+  );
 };
 
 let mermaidRenderer: Promise<{
