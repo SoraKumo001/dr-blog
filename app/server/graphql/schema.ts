@@ -1,18 +1,14 @@
 import { GraphQLScalarType } from "graphql";
-import * as auth from "./auth";
+import { signIn } from "./auth";
 import { builder } from "./builder";
-import * as post from "./post";
-import * as storage from "./storage";
-import * as system from "./system";
-
-// dummy
-const dummy = () => ({
-  auth,
-  system,
-  post,
-  storage,
-});
-dummy();
+import { normalizationPostFiles } from "./post";
+import {
+  uploadSystemIcon,
+  uploadPostImage,
+  uploadPostIcon,
+  BucketObjectType,
+} from "./storage";
+import { backup, restore, restoreFiles } from "./system";
 
 if (!builder.configStore.hasConfig("Upload")) {
   const Upload = new GraphQLScalarType({
@@ -22,3 +18,19 @@ if (!builder.configStore.hasConfig("Upload")) {
 }
 
 export const schema = builder.toSchema({ sortSchema: false });
+
+// @ts-ignore
+schema.extensions = {
+  ...schema.extensions,
+  _keep: [
+    signIn,
+    normalizationPostFiles,
+    uploadSystemIcon,
+    uploadPostImage,
+    uploadPostIcon,
+    BucketObjectType,
+    backup,
+    restore,
+    restoreFiles,
+  ],
+};

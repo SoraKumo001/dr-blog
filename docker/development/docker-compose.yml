@@ -1,14 +1,14 @@
 services:
   postgres:
-    container_name: mdblog-postgres
-    image: postgres:alpine
+    container_name: dr-blog-postgres
+    image: postgres:18-alpine
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
-      - mdblog-vol:/var/lib/postgresql/data
+      - dr-blog-vol:/var/lib/postgresql
     ports:
       - "25432:5432"
 volumes:
-  mdblog-vol:
+  dr-blog-vol:

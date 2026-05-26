@@ -1,7 +1,10 @@
 {
   "name": "cloud-blog",
   "private": true,
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "app/server/graphql/**/*.ts"
+  ],
   "type": "module",
   "scripts": {
     "dev": "npm-run-all -p dev:*",
