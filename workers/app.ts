@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { contextStorage } from "hono/context-storage";
-import { createRequestHandler } from "react-router";
+import { createRequestHandler, RouterContextProvider } from "react-router";
 // @ts-ignore
 import * as build from "../build/server/index.js";
 
@@ -22,17 +22,18 @@ app.use(async (c) => {
   const handler = createRequestHandler(build, import.meta.env?.MODE);
 
   const next = (input: Request | string, init?: RequestInit) => {
-    return handler(new Request(input, init), {
+    const nextContext = Object.assign(new RouterContextProvider(), {
       cloudflare: { env: c.env },
     });
+    return handler(new Request(input, init), nextContext);
   };
-  const context = {
+  const context = Object.assign(new RouterContextProvider(), {
     cloudflare: {
       env: c.env,
       ctx: c.executionCtx,
       next,
     },
-  };
+  });
 
   const response = await handler(c.req.raw, context);
 

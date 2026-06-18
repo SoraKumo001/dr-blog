@@ -4,13 +4,13 @@ import type { GraphQLScalarType } from "graphql";
 
 const scalars = (resolvers: GraphQLScalarType[]) => {
   return Object.fromEntries(
-    resolvers.map((v) => [v.name, v.extensions.codegenScalarType])
+    resolvers.map((v) => [v.name, v.extensions.codegenScalarType]),
   );
 };
 
 export const defineConfig: CodegenConfig = {
   schema: "codegen/schema.graphql",
-  documents: "codegen/*.graphql",
+  documents: ["codegen/*.graphql", "!codegen/schema.graphql"],
   overwrite: true,
   generates: {
     "app/generated/graphql.ts": {

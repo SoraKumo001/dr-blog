@@ -42,4 +42,12 @@ export default defineConfig(({ mode }) => ({
       },
     },
   ],
+  ssr: {
+    noExternal: [
+      "@pothos/core",
+      "@pothos/plugin-drizzle",
+      "pothos-drizzle-generator",
+      "react-router",
+    ],
+  },
 }));
