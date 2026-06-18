@@ -1,4 +1,4 @@
-# Blog system made with react-router@7 + Hono + Cloudflare
+# Blog system made with react-router@8 + Hono + Cloudflare
 
 https://next-blog.croud.jp/
 
