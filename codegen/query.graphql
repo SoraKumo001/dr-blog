@@ -48,7 +48,7 @@ query FindPosts {
 }
 
 mutation CreateOnePost {
-  createOnePost(input: {  content: "", published: false }) {
+  createOnePost(input: { content: "", published: false }) {
     id
     published
     title
@@ -88,7 +88,7 @@ mutation UpdatePost(
       content: $content
       published: $published
       publishedAt: $publishedAt
-      categories:  $categories
+      categories: $categories
       cardId: $cardId
     }
     where: { id: { eq: $postId } }

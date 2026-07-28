@@ -1,11 +1,10 @@
-import { parse, serialize, type SerializeOptions } from "cookie";
+import { parseCookie, stringifySetCookie, type SerializeOptions } from "cookie";
 import { createYoga } from "graphql-yoga";
 import { type Context, db } from "../server/db";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { getUserFromToken } from "~/libs/getUserFromToken";
 import { schema } from "~/server/graphql/schema";
 import { storage } from "~/server/libs/getStorage";
-
 
 const yoga = createYoga<
   {
@@ -18,19 +17,19 @@ const yoga = createYoga<
   schema,
   fetchAPI: { Response },
   context: async ({ request: req, env, responseCookies }) => {
-    const cookies = parse(req.headers.get("Cookie") || "");
+    const cookies = parseCookie(req.headers.get("Cookie") || "");
     const token = cookies["auth-token"];
     const user = await getUserFromToken({ token, secret: env.SECRET_KEY });
     const setCookie = (
       name: string,
       value: string,
-      options?: SerializeOptions
+      options?: SerializeOptions,
     ) => {
-      const result = serialize(name, value, options);
+      const result = stringifySetCookie({ name, value, ...options });
       responseCookies.push(result);
       return result;
     };
-    
+
     const storageService = storage({
       projectId: env.GOOGLE_PROJECT_ID ?? "",
       clientEmail: env.GOOGLE_CLIENT_EMAIL ?? "",
