@@ -38,7 +38,6 @@ export default defineConfig({
 			NEXT_PUBLIC_OGP_URL: bindings.secret(),
 			NEXT_PUBLIC_IMAGE_URL: bindings.secret(),
 			SECRET_KEY: bindings.secret(),
-			ENV: bindings.secret(),
 		},
 	},
 });
