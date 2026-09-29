@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
@@ -16,9 +18,22 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   plugins: [
-    mode === "production"
-      ? undefined
-      : cloudflare({ viteEnvironment: { name: "ssr" } }),
+    cloudflare({
+      viteEnvironment: { name: "ssr" },
+      experimental: { newConfig: true },
+    }),
+    {
+      name: "sync-client-manifest-for-react-router",
+      writeBundle() {
+        if (this.environment?.name === "client") {
+          const src = path.resolve(".cloudflare/output/v0/workers/default/assets");
+          const dest = path.resolve("build/client");
+          if (fs.existsSync(src)) {
+            fs.cpSync(src, dest, { recursive: true });
+          }
+        }
+      },
+    },
     tailwindcss(),
     reactRouter(),
     wasmImageOptimizationPlugin(),
