@@ -20,7 +20,7 @@ export const restoreFiles = builder.mutationField("restoreFiles", (t) =>
         files.map(async (file) => {
           await s.acquire();
           await storageService.upload({
-            file,
+            file: new Blob([await file.arrayBuffer()], { type: file.type }),
             name: file.name,
             published: true,
             metadata: { cacheControl: "public, max-age=31536000, immutable" },

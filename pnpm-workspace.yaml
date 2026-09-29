@@ -1,0 +1,25 @@
+allowBuilds:
+  '@firebase/util': true
+  '@parcel/watcher': true
+  esbuild: true
+  unrs-resolver: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - '@cloudflare/vite-plugin@1.62.0'
+  - '@cloudflare/workers-types@5.20260928.1'
+  - '@graphql-codegen/plugin-helpers@7.4.0'
+  - '@graphql-codegen/typescript-operations@6.1.8'
+  - '@graphql-codegen/visitor-plugin-common@7.2.6'
+  - '@typescript-eslint/eslint-plugin@8.71.0'
+  - '@typescript-eslint/parser@8.71.0'
+  - '@typescript-eslint/project-service@8.71.0'
+  - '@typescript-eslint/scope-manager@8.71.0'
+  - '@typescript-eslint/tsconfig-utils@8.71.0'
+  - '@typescript-eslint/type-utils@8.71.0'
+  - '@typescript-eslint/types@8.71.0'
+  - '@typescript-eslint/typescript-estree@8.71.0'
+  - '@typescript-eslint/utils@8.71.0'
+  - '@typescript-eslint/visitor-keys@8.71.0'
+  - hono@4.13.10
+  - typescript-eslint@8.71.0
+  - wrangler@4.143.0

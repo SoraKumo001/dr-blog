@@ -35,6 +35,7 @@ export const UrqlProvider = ({
     const url = isServerSide ? `${host}${endpoint}` : endpoint;
     return new Client({
       url,
+      preferGetMethod: false,
       fetchOptions: {
         headers: {
           "apollo-require-preflight": "true",

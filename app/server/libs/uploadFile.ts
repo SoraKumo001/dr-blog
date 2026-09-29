@@ -14,7 +14,7 @@ export const uploadFile = async ({
   const id = `${new uuid(4).format()}-[${binary.name}]`;
   await storageService.upload({
     name: id,
-    file: binary,
+    file: new Blob([await binary.arrayBuffer()], { type: binary.type }),
     published: true,
     metadata: { cacheControl: "public, max-age=31536000, immutable" },
   });
