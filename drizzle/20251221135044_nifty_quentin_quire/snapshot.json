@@ -1,54 +1,378 @@
 {
-  "version": "8",
+  "type": "base",
+  "version": "9",
   "dialect": "postgres",
   "id": "1b1b1b5b-b7db-4377-bd17-bb905130ae13",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "Category"
+      ],
+      "writes": [
+        "s|tbl|public.Category",
+        "n|tbl|public.Category",
+        "e|tbl|public.Category",
+        "n|rel|public.Category",
+        "n|type|public.Category",
+        "n|rel|public.Category_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "CategoryToPost"
+      ],
+      "writes": [
+        "s|tbl|public.CategoryToPost",
+        "n|tbl|public.CategoryToPost",
+        "e|tbl|public.CategoryToPost",
+        "n|rel|public.CategoryToPost",
+        "n|type|public.CategoryToPost",
+        "n|rel|public.CategoryToPost_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "FireStore"
+      ],
+      "writes": [
+        "s|tbl|public.FireStore",
+        "n|tbl|public.FireStore",
+        "e|tbl|public.FireStore",
+        "n|rel|public.FireStore",
+        "n|type|public.FireStore",
+        "n|rel|public.FireStore_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "FireStoreToPost"
+      ],
+      "writes": [
+        "s|tbl|public.FireStoreToPost",
+        "n|tbl|public.FireStoreToPost",
+        "e|tbl|public.FireStoreToPost",
+        "n|rel|public.FireStoreToPost",
+        "n|type|public.FireStoreToPost",
+        "n|rel|public.FireStoreToPost_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "Post"
+      ],
+      "writes": [
+        "s|tbl|public.Post",
+        "n|tbl|public.Post",
+        "e|tbl|public.Post",
+        "n|rel|public.Post",
+        "n|type|public.Post",
+        "n|rel|public.Post_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "System"
+      ],
+      "writes": [
+        "s|tbl|public.System",
+        "n|tbl|public.System",
+        "e|tbl|public.System",
+        "n|rel|public.System",
+        "n|type|public.System",
+        "n|rel|public.System_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "User"
+      ],
+      "writes": [
+        "s|tbl|public.User",
+        "n|tbl|public.User",
+        "e|tbl|public.User",
+        "n|rel|public.User",
+        "n|type|public.User",
+        "n|rel|public.User_pkey",
+        "n|rel|public.User_email_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "CategoryToPost"
+      ],
+      "writes": [
+        "s|fk|public.CategoryToPost.CategoryToPost_postId_Post_id_fkey",
+        "n|fk|public.CategoryToPost.CategoryToPost_postId_Post_id_fkey",
+        "e|fk|public.CategoryToPost.CategoryToPost_postId_Post_id_fkey",
+        "n|con|public.CategoryToPost.CategoryToPost_postId_Post_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.CategoryToPost",
+        "n|sch|public",
+        "n|tbl|public.Post",
+        "n|sch|public",
+        "n|col|public.CategoryToPost.postId",
+        "n|col|public.Post.id",
+        "e|uniqueness|public.Post.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "CategoryToPost"
+      ],
+      "writes": [
+        "s|fk|public.CategoryToPost.CategoryToPost_categoryId_Category_id_fkey",
+        "n|fk|public.CategoryToPost.CategoryToPost_categoryId_Category_id_fkey",
+        "e|fk|public.CategoryToPost.CategoryToPost_categoryId_Category_id_fkey",
+        "n|con|public.CategoryToPost.CategoryToPost_categoryId_Category_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.CategoryToPost",
+        "n|sch|public",
+        "n|tbl|public.Category",
+        "n|sch|public",
+        "n|col|public.CategoryToPost.categoryId",
+        "n|col|public.Category.id",
+        "e|uniqueness|public.Category.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "FireStoreToPost"
+      ],
+      "writes": [
+        "s|fk|public.FireStoreToPost.FireStoreToPost_postId_Post_id_fkey",
+        "n|fk|public.FireStoreToPost.FireStoreToPost_postId_Post_id_fkey",
+        "e|fk|public.FireStoreToPost.FireStoreToPost_postId_Post_id_fkey",
+        "n|con|public.FireStoreToPost.FireStoreToPost_postId_Post_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.FireStoreToPost",
+        "n|sch|public",
+        "n|tbl|public.Post",
+        "n|sch|public",
+        "n|col|public.FireStoreToPost.postId",
+        "n|col|public.Post.id",
+        "e|uniqueness|public.Post.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "FireStoreToPost"
+      ],
+      "writes": [
+        "s|fk|public.FireStoreToPost.FireStoreToPost_fireStoreId_FireStore_id_fkey",
+        "n|fk|public.FireStoreToPost.FireStoreToPost_fireStoreId_FireStore_id_fkey",
+        "e|fk|public.FireStoreToPost.FireStoreToPost_fireStoreId_FireStore_id_fkey",
+        "n|con|public.FireStoreToPost.FireStoreToPost_fireStoreId_FireStore_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.FireStoreToPost",
+        "n|sch|public",
+        "n|tbl|public.FireStore",
+        "n|sch|public",
+        "n|col|public.FireStoreToPost.fireStoreId",
+        "n|col|public.FireStore.id",
+        "e|uniqueness|public.FireStore.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "Post"
+      ],
+      "writes": [
+        "s|fk|public.Post.Post_authorId_User_id_fkey",
+        "n|fk|public.Post.Post_authorId_User_id_fkey",
+        "e|fk|public.Post.Post_authorId_User_id_fkey",
+        "n|con|public.Post.Post_authorId_User_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.Post",
+        "n|sch|public",
+        "n|tbl|public.User",
+        "n|sch|public",
+        "n|col|public.Post.authorId",
+        "n|col|public.User.id",
+        "e|uniqueness|public.User.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "Post"
+      ],
+      "writes": [
+        "s|fk|public.Post.Post_cardId_FireStore_id_fkey",
+        "n|fk|public.Post.Post_cardId_FireStore_id_fkey",
+        "e|fk|public.Post.Post_cardId_FireStore_id_fkey",
+        "n|con|public.Post.Post_cardId_FireStore_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.Post",
+        "n|sch|public",
+        "n|tbl|public.FireStore",
+        "n|sch|public",
+        "n|col|public.Post.cardId",
+        "n|col|public.FireStore.id",
+        "e|uniqueness|public.FireStore.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "System"
+      ],
+      "writes": [
+        "s|fk|public.System.System_iconId_FireStore_id_fkey",
+        "n|fk|public.System.System_iconId_FireStore_id_fkey",
+        "e|fk|public.System.System_iconId_FireStore_id_fkey",
+        "n|con|public.System.System_iconId_FireStore_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.System",
+        "n|sch|public",
+        "n|tbl|public.FireStore",
+        "n|sch|public",
+        "n|col|public.System.iconId",
+        "n|col|public.FireStore.id",
+        "e|uniqueness|public.FireStore.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "System"
+      ],
+      "writes": [
+        "s|fk|public.System.System_cardId_FireStore_id_fkey",
+        "n|fk|public.System.System_cardId_FireStore_id_fkey",
+        "e|fk|public.System.System_cardId_FireStore_id_fkey",
+        "n|con|public.System.System_cardId_FireStore_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.System",
+        "n|sch|public",
+        "n|tbl|public.FireStore",
+        "n|sch|public",
+        "n|col|public.System.cardId",
+        "n|col|public.FireStore.id",
+        "e|uniqueness|public.FireStore.id"
+      ]
+    }
+  ],
   "ddl": [
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "Category",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "CategoryToPost",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "FireStore",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "FireStoreToPost",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "Post",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "System",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
       "isRlsEnabled": false,
-      "name": "User",
-      "entityType": "tables",
-      "schema": "public"
+      "entityType": "tables"
     },
     {
+      "schema": "public",
+      "name": "User",
+      "isRlsEnabled": false,
+      "entityType": "tables"
+    },
+    {
+      "schema": "public",
+      "table": "Category",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -56,51 +380,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Category"
+      "entityType": "columns"
     },
     {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "Category",
       "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Category"
-    },
-    {
-      "type": "timestamp(3)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "createdAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Category"
-    },
-    {
-      "type": "timestamp(3)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updatedAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Category"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -108,12 +393,51 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "postId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "CategoryToPost"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "Category",
+      "name": "createdAt",
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "Category",
+      "name": "updatedAt",
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "CategoryToPost",
+      "name": "postId",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "CategoryToPost",
+      "name": "categoryId",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -121,25 +445,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "categoryId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "CategoryToPost"
+      "entityType": "columns"
     },
     {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "FireStore",
       "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "FireStore"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -147,12 +458,12 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "FireStore",
       "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "FireStore"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -160,25 +471,25 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "FireStore",
       "name": "mimeType",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "FireStore"
-    },
-    {
-      "type": "timestamp(3)",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": "now()",
+      "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "FireStore",
       "name": "createdAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "FireStore"
-    },
-    {
       "type": "timestamp(3)",
       "typeSchema": null,
       "notNull": true,
@@ -186,25 +497,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "FireStore",
       "name": "updatedAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "FireStore"
-    },
-    {
-      "type": "text",
+      "type": "timestamp(3)",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "FireStoreToPost",
       "name": "postId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "FireStoreToPost"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -212,12 +523,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "fireStoreId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "FireStoreToPost"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "FireStoreToPost",
+      "name": "fireStoreId",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "Post",
+      "name": "id",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -225,12 +549,12 @@
       "default": "gen_random_uuid ()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "Post",
+      "name": "published",
       "type": "boolean",
       "typeSchema": null,
       "notNull": true,
@@ -238,12 +562,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "published",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "Post",
+      "name": "title",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -251,12 +575,12 @@
       "default": "'New Post'",
       "generated": null,
       "identity": null,
-      "name": "title",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "Post",
+      "name": "content",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -264,12 +588,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "content",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "Post",
+      "name": "authorId",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -277,12 +601,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "authorId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "Post",
+      "name": "cardId",
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -290,25 +614,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "cardId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "columns"
     },
     {
-      "type": "timestamp(3)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "Post",
       "name": "createdAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
-    },
-    {
       "type": "timestamp(3)",
       "typeSchema": null,
       "notNull": true,
@@ -316,12 +627,12 @@
       "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "Post",
       "name": "updatedAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
-    },
-    {
       "type": "timestamp(3)",
       "typeSchema": null,
       "notNull": true,
@@ -329,25 +640,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "Post",
       "name": "publishedAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "Post"
-    },
-    {
-      "type": "text",
+      "type": "timestamp(3)",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "System",
       "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "System"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -355,12 +666,12 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "System",
       "name": "title",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "System"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -368,25 +679,25 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "System",
       "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "System"
-    },
-    {
       "type": "text",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "System",
       "name": "iconId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "System"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -394,25 +705,25 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "System",
       "name": "cardId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "System"
-    },
-    {
-      "type": "timestamp(3)",
+      "type": "text",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
-      "default": "now()",
+      "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "System",
       "name": "createdAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "System"
-    },
-    {
       "type": "timestamp(3)",
       "typeSchema": null,
       "notNull": true,
@@ -420,12 +731,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updatedAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "System"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "System",
+      "name": "updatedAt",
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "User",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -433,12 +757,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "User"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "User",
+      "name": "email",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -446,12 +770,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "email",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "User"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "User",
+      "name": "name",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -459,25 +783,12 @@
       "default": "'User'",
       "generated": null,
       "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "User"
+      "entityType": "columns"
     },
     {
-      "type": "timestamp(3)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "User",
       "name": "createdAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "User"
-    },
-    {
       "type": "timestamp(3)",
       "typeSchema": null,
       "notNull": true,
@@ -485,12 +796,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updatedAt",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "User"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "User",
+      "name": "updatedAt",
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "CategoryToPost",
+      "name": "CategoryToPost_postId_Post_id_fkey",
       "nameExplicit": false,
       "columns": [
         "postId"
@@ -502,12 +826,12 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "CategoryToPost_postId_Post_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "CategoryToPost"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "CategoryToPost",
+      "name": "CategoryToPost_categoryId_Category_id_fkey",
       "nameExplicit": false,
       "columns": [
         "categoryId"
@@ -519,12 +843,12 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "CategoryToPost_categoryId_Category_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "CategoryToPost"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "FireStoreToPost",
+      "name": "FireStoreToPost_postId_Post_id_fkey",
       "nameExplicit": false,
       "columns": [
         "postId"
@@ -536,12 +860,12 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "FireStoreToPost_postId_Post_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "FireStoreToPost"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "FireStoreToPost",
+      "name": "FireStoreToPost_fireStoreId_FireStore_id_fkey",
       "nameExplicit": false,
       "columns": [
         "fireStoreId"
@@ -553,12 +877,12 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "FireStoreToPost_fireStoreId_FireStore_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "FireStoreToPost"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "Post",
+      "name": "Post_authorId_User_id_fkey",
       "nameExplicit": false,
       "columns": [
         "authorId"
@@ -570,12 +894,12 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "Post_authorId_User_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "Post",
+      "name": "Post_cardId_FireStore_id_fkey",
       "nameExplicit": false,
       "columns": [
         "cardId"
@@ -587,12 +911,12 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "Post_cardId_FireStore_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "Post"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "System",
+      "name": "System_iconId_FireStore_id_fkey",
       "nameExplicit": false,
       "columns": [
         "iconId"
@@ -604,12 +928,12 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "System_iconId_FireStore_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "System"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "System",
+      "name": "System_cardId_FireStore_id_fkey",
       "nameExplicit": false,
       "columns": [
         "cardId"
@@ -621,94 +945,90 @@
       ],
       "onUpdate": "CASCADE",
       "onDelete": "CASCADE",
-      "name": "System_cardId_FireStore_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "System"
+      "entityType": "fks"
     },
     {
+      "schema": "public",
+      "table": "CategoryToPost",
+      "name": "CategoryToPost_pkey",
       "columns": [
         "postId",
         "categoryId"
       ],
       "nameExplicit": false,
-      "name": "CategoryToPost_pkey",
-      "entityType": "pks",
-      "schema": "public",
-      "table": "CategoryToPost"
+      "entityType": "pks"
     },
     {
+      "schema": "public",
+      "table": "FireStoreToPost",
+      "name": "FireStoreToPost_pkey",
       "columns": [
         "postId",
         "fireStoreId"
       ],
       "nameExplicit": false,
-      "name": "FireStoreToPost_pkey",
-      "entityType": "pks",
-      "schema": "public",
-      "table": "FireStoreToPost"
+      "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "Category_pkey",
       "schema": "public",
       "table": "Category",
-      "entityType": "pks"
-    },
-    {
+      "name": "Category_pkey",
       "columns": [
         "id"
       ],
       "nameExplicit": false,
-      "name": "FireStore_pkey",
+      "entityType": "pks"
+    },
+    {
       "schema": "public",
       "table": "FireStore",
-      "entityType": "pks"
-    },
-    {
+      "name": "FireStore_pkey",
       "columns": [
         "id"
       ],
       "nameExplicit": false,
-      "name": "Post_pkey",
+      "entityType": "pks"
+    },
+    {
       "schema": "public",
       "table": "Post",
-      "entityType": "pks"
-    },
-    {
+      "name": "Post_pkey",
       "columns": [
         "id"
       ],
       "nameExplicit": false,
-      "name": "System_pkey",
+      "entityType": "pks"
+    },
+    {
       "schema": "public",
       "table": "System",
-      "entityType": "pks"
-    },
-    {
+      "name": "System_pkey",
       "columns": [
         "id"
       ],
       "nameExplicit": false,
-      "name": "User_pkey",
-      "schema": "public",
-      "table": "User",
       "entityType": "pks"
     },
     {
+      "schema": "public",
+      "table": "User",
+      "name": "User_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "User",
+      "name": "User_email_key",
       "nameExplicit": false,
       "columns": [
         "email"
       ],
       "nullsNotDistinct": false,
-      "name": "User_email_key",
-      "schema": "public",
-      "table": "User",
       "entityType": "uniques"
     }
-  ],
-  "renames": []
+  ]
 }

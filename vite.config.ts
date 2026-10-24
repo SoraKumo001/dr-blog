@@ -20,13 +20,14 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     cloudflare({
       viteEnvironment: { name: "ssr" },
-      experimental: { newConfig: true },
     }),
     {
       name: "sync-client-manifest-for-react-router",
       writeBundle() {
         if (this.environment?.name === "client") {
-          const src = path.resolve(".cloudflare/output/v0/workers/default/assets");
+          const src = path.resolve(
+            ".cloudflare/output/v0/workers/default/assets",
+          );
           const dest = path.resolve("build/client");
           if (fs.existsSync(src)) {
             fs.cpSync(src, dest, { recursive: true });
@@ -48,7 +49,7 @@ export default defineConfig(({ mode }) => ({
       name: "updater",
       async hotUpdate({ server }) {
         const mod = await server.moduleGraph.getModuleByUrl(
-          "/app/server/graphql/builder.ts"
+          "/app/server/graphql/builder.ts",
         );
 
         if (mod) {
